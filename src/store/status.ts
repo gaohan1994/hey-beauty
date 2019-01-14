@@ -1,18 +1,20 @@
-// import {
-//   CHANGE_LOADING,
-// } from '../constants';
-// import { Stores } from './index';
+import {
+  CHANGE_ROUTE,
+} from '../constants';
+import { Stores } from './index';
 
 import Actions from '../action';
 
 export type Status = {
   showLogin: boolean;
   loading: boolean;
+  currentRoute: string;
 };
 
 export const initState = {
   showLogin: false,
   loading: false,
+  currentRoute: 'home',
 };
 
 /**
@@ -25,7 +27,15 @@ export const initState = {
  */
 export default function status (state: Status = initState,  action: Actions): Status {
   switch (action.type) {
-    
+    case CHANGE_ROUTE:
+      const { payload: { currentRoute } } = action;
+      return {
+        ...state,
+        currentRoute,
+      };
+
     default: return state;
   }
 }
+
+export const getCurrentRoute = (state: Stores) => state.status.currentRoute;

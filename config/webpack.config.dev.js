@@ -222,18 +222,6 @@ module.exports = {
                   importLoaders: 1,
                   // modules: true,   // 新增对css modules的支持
                   // localIdentName: '[name]__[local]__[hash:base64:5]',
-                  modifyVars: {
-                    'primary-color': '#f8c030',
-                    'card-actions-background': '#f5f8fa',
-                    'brand-primary': '#f8c030',
-                    'layout-header-background': '#f8c030',
-                    'layout-header-height': '40px',
-
-                    // menu
-                    'menu-bg': '#f8c030',
-                    'menu-highlight-color': '#ffffff',
-                    'menu-item-active-bg': '#e9b52b',
-                  },
                   javascriptEnabled: true,
                 },
               },

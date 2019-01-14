@@ -1,0 +1,27 @@
+@import "../global.less";
+
+.layoutHeader {
+  padding: 0px;
+  background: #ffffff;
+  height: 50px;
+  line-height: 50px;
+  .display-flex(center, center); 
+}
+
+.menus {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+.title {
+  color: @theme-color;
+}
+
+.mr {
+  margin-right: 20px;
+}

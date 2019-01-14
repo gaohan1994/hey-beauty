@@ -16,6 +16,7 @@ import { mergeProps } from '../common/config';
  * interface
  */
 import { Stores } from '../store/index';
+// import AppHeader from 'src/component/Header/AppHeader';
 
 interface AppProps {
   dispatch?: Dispatch;
@@ -27,7 +28,7 @@ class App extends React.Component<AppProps, AppState> {
   public render() {
     return (
       <div className={styles.container}>
-        hey-beauty
+        beauty
       </div>
     );
   }

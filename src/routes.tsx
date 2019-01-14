@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import config from './common/config';
 import DocumentTitle from 'react-document-title';
 import history from './history';
-// import BasicLayout from './component/basicLayout';
+import BasicLayout from './component/BasicLayout';
 import { Stores as ReducerStores } from './store/index';
 import styles from './global.less';
 
@@ -21,6 +21,10 @@ import styles from './global.less';
 import App from './container/App';
 import NotFound from './container/exception/NotFound';
 
+import Home from './container/Home';
+import About from './container/About';
+import Selected from './container/Selected';
+
 /**
  * @param title -- 网页 title
  *
@@ -29,6 +33,14 @@ import NotFound from './container/exception/NotFound';
  */
 export interface DocumentTitleProps {
   
+}
+
+export function renderRouteLayout (Component: any, route: string): React.ReactNode {
+  return (
+    <BasicLayout>
+      <Component />
+    </BasicLayout>
+  );
 }
 
 /**
@@ -50,7 +62,6 @@ export interface DocumentTitleProps {
  * @class RouterConfig
  * @extends {React.StateLessComponent<DocumentTitleProps>}
  */
-
 const RouterConfig = ({ }: DocumentTitleProps) => {
   return (
     <DocumentTitle title={config.DEFAULT_DOCUMENT_TITLE}>
@@ -69,7 +80,11 @@ const RouterConfig = ({ }: DocumentTitleProps) => {
             };
           }}
         >   
-            <Route path="/" exact={true} component={App} />
+            <Route path="/" exact={true} render={() => renderRouteLayout(App, '/')} />
+            <Route path="/home" render={() => renderRouteLayout(Home, '/home')} /> 
+            <Route path="/about" render={() => renderRouteLayout(About, '/about')} /> 
+            <Route path="/selected" render={() => renderRouteLayout(Selected, '/selected')} /> 
+
             <Route component={NotFound}/>
         </AnimatedSwitch>
       </Router>
