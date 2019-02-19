@@ -1,6 +1,3 @@
-import numeral from 'numeral';
-import { merge } from 'lodash';
-import history from '../history';
 /**
  * created by Ghan 9.3
  * @todo 设置常用的配置信息并根据环境变量导出
@@ -10,11 +7,7 @@ import history from '../history';
  * @param FETCH_ENTRY -- 统一访问入口
  */
 export type InterfaceConfig = {
-  WX_PAY_FETCH_ENTTRY: string;
   FETCH_ENTRY: string;
-  INSIDE_FETCH_ENTRY: string;
-  DEV_OPERA_INFO: any;
-  DEV_WECHAT_OPENID: string;
 } & DefaultCommonConfig;
 
 /**
@@ -44,10 +37,10 @@ export interface DefaultCommonConfig {
 }
 
 const defaultCommonConfig: DefaultCommonConfig = {
-  DEFAULT_DOCUMENT_TITLE: '慧美食点餐',
+  DEFAULT_DOCUMENT_TITLE: 'Hey-Beauty',
   DEFAULT_FETCH_METHOD: 'POST',
   DEFAULT_BALL_SPEED: 220,
-  DEFAULT_PAGE_SIZE: 10,
+  DEFAULT_PAGE_SIZE: 20,
   DEFAUL_MCHNT_CD: '60000000200', // 60000000217 60000000200
   DEFAULT_PICTURE_LING: '//net.huanmusic.com/qg/pic_default.png',
   TAKEAWAYCARTID: 'TAKEAWAYCARTID',
@@ -60,20 +53,12 @@ const defaultCommonConfig: DefaultCommonConfig = {
 // 测试环境 http://202.101.149.132:7680/BKMS_HMS/GateWayAction.do
 const devConfig: InterfaceConfig = {
   ...defaultCommonConfig,
-  INSIDE_FETCH_ENTRY: 'http://172.30.20.100:5980/BKMS_HMS/GateWayAction.do',
-  FETCH_ENTRY: 'http://202.101.149.132:7680/BKMS_HMS/GateWayAction.do',
-  WX_PAY_FETCH_ENTTRY: 'http://202.101.149.132:7680/BKMS/WeChatGateWayAction.do',
-  DEV_OPERA_INFO: { user_id: '13101402833' }, // user_id: '13101402833',
-  DEV_WECHAT_OPENID: 'TESTWECHATOPENID',
+  FETCH_ENTRY: 'http://192.168.31.51:8080',
 };
 
 const proConfig: InterfaceConfig = {
   ...defaultCommonConfig,
-  INSIDE_FETCH_ENTRY: 'http://172.30.20.100:5980/BKMS_HMS/GateWayAction.do',
-  FETCH_ENTRY: 'http://202.101.149.132:7680/BKMS_HMS/GateWayAction.do',
-  WX_PAY_FETCH_ENTTRY: 'http://202.101.149.132:7680/BKMS/WeChatGateWayAction.do',
-  DEV_OPERA_INFO: {},
-  DEV_WECHAT_OPENID: 'TESTWECHATOPENID',
+  FETCH_ENTRY: 'http://192.168.31.51:8080',
 };
 
 interface ProcessChoiceFilterFunc<T> {
@@ -121,106 +106,12 @@ const isArrayFn = (value: any): boolean => {
   }
 };
 
-/**
- * @todo 返回餐位费
- * @param { params 获取餐位费类型和餐位费返回计算好的餐位费 }
- */
-const getMealFee = (params: any): any => {
-
-  const fee = numeral(params.fee).value();
-  const fee_type = numeral(params.fee_type).value();
-  const people_num = numeral(params.people_num).value();
-  let total = 0;
-  params.data.forEach((item: any) => {
-    total += numeral(item.num).value() * numeral(item.price).value();
-  });
-  let meal_fee = 0;
-
-  switch (fee_type) {
-    case 0:
-      // 无餐位费
-      break;
-    case 1:
-      // 定额
-      meal_fee = fee;
-      break;
-    case 2:
-      // 百分比
-      meal_fee = total * fee;
-      break;
-    case 3:
-      // 人头
-      meal_fee = people_num * fee;
-      break;
-    default:
-      break;
-  }
-
-  total = total + meal_fee;
-
-  return {
-    meal_fee,
-    total,
-  };
-};
-
-/**
- * @todo 传入一个订单返回一个计算好金钱的订单
- * @param { order 传入订单根据订单的餐位费打包费和菜品金额计算出订单的total和stdtrnsamt }
- */
-const countTotal = (param: any): any => {
-  const order = merge({}, param, {});
-  const { total, meal_fee } = getMealFee(order);
-  order.meal_fee = meal_fee;
-  order.total = total;
-  order.stdtrnsamt = numeral(total).format('0.00');
-  return order;
-};
-
-/**
- * len: 需要字符串的长度
- *
- * @export
- * @param {*} len
- * @returns
- */
-export function randomString(len: number): string {
-  const length = len || 32;
-  /**
-   * @param { $chars 默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1 }
-   * @param { $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678' }
-   */
-  const $chars = '0123456789';
-  const maxPos = $chars.length;
-  let pwd = '';
-  for (let i = 0; i < length; i++) {
-    pwd += $chars.charAt(Math.floor(Math.random() * maxPos));
-  }
-  return pwd;
-}
-
-/**
- * @todo 跳转函数
- * @param { url: string 要跳转的路由 }
- * @param { rest: 其他参数待补充 } 
- */
-
-class Navigate {
-
-  static navto = (url: string, ...rest: any[]) => {
-    history.push(url);
-  } 
-}
-
 export { 
   devConfig, 
   proConfig,
   mergeProps,
   formatOrderTime,
   isArrayFn,
-  getMealFee,
-  countTotal,
-  Navigate,
 };
 
 export default processChoiceFilter(devConfig, proConfig);

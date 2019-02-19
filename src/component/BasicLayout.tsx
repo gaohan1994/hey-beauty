@@ -27,7 +27,7 @@ class BasicLayout extends Component<BasicLayoutProps, BasicLayoutState> {
   public onMenuClickHandle = (menu: any) => {
     const payload: DispatchAbstract<ChangeRouteI> = {
       dispatch: this.props.dispatch,
-      param: { route: menu.key }
+      param: { route: menu.key !== 'app' ? menu.key : '' }
     };
     StatusController.changeRoute(payload);
   }
@@ -57,11 +57,11 @@ class BasicLayout extends Component<BasicLayoutProps, BasicLayoutState> {
 
     const menus: any[] = [
       {
-        key: 'home',
+        key: 'app',
         title: '首页',
       },
       {
-        key: 'selected',
+        key: 'home',
         title: '社区精选',
       },
       {

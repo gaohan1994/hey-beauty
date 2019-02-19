@@ -26,7 +26,13 @@ const ConsoleUtil = (message: any, title?: string): void => {
         if (title) {
             console.log(`---------------------- ${title} ----------------------`);
         }
-        console.log(message);
+
+        if (typeof message === 'string') {
+            console.log(message);    
+        } else {
+            console.table(message);
+        }
+        
         if (title) {
             console.log(`---------------------- ${title}结束 ----------------------`);
         }
@@ -99,7 +105,7 @@ const request = (
     url: string,
     ...args: Array<any>
 ): any => {
-    url = config.FETCH_ENTRY;
+    // url = config.FETCH_ENTRY;
     // url = config.INSIDE_FETCH_ENTRY;
     console.log('fetch url: ', url);
     const argByType: any = {};
@@ -141,7 +147,7 @@ const request = (
 
         /* 默认headers */
         headers: {
-            'Content-Type': 'text/html; charset=utf-8',
+            'Content-Type': 'application/json',
             // 'Accept': 'text/html',
             // 'Content-Type': 'application/x-www-form-urlencoded', /* 默认格式 */
             // 'credentials': 'include',
@@ -206,108 +212,50 @@ const request = (
     }
 };
 
-const payRequest = (
-    url: string,
-    ...args: Array<any>
-): any => {
-    url = config.WX_PAY_FETCH_ENTTRY;
-    const argByType: any = {};
-    const functions: Array<GenericCallbackFn> = [];
-    let callback: GenericCallbackFn;
-    let errorCallback: GenericCallbackT<RequsetError> = defaultErrorCallback;
+export interface PackParam {
+    code: string;
+    biz_content: any;
+    msg?: any;
+}
 
-    args.forEach(arg => {
-        if (typeof arg === 'function') {
-            /**
-             * 如果是 function push 到 functions 中
-             */
-            functions.push(arg);
-        } else {
-            argByType[typeof arg] = arg;
-        }
-    });
-
-    /**
-     *  判断长度 第一个是 callback 第二个是 errorcallback
-     */
-
-    if (functions && functions.length > 0) {
-        if (functions.length === 1) {
-            callback = functions[0];
-        } else if (functions.length === 2) {
-            callback = functions[0];
-            errorCallback = functions[1];
-        }
-    }
-
-    const httpMethod = (argByType.string || config.DEFAULT_FETCH_METHOD).toUpperCase();
-    const params = argByType.object || {};
-    let options: RequestInit = {
-
-        /* 默认method */
-        method: httpMethod,
-
-        /* 默认headers */
-        headers: {
-            'Content-Type': 'text/html; charset=utf-8',
-            'Accept': 'text/html',
-        }
-    };
-
-    /* 处理body */
-    if (options.method) {
-        if (options.method.toUpperCase() === 'POST') {
-            options.body = params
-            ? JSON.stringify(getDefaultConfig(params)) 
-            : '';
-        }
-    }
+/**
+ * @param `拆包用`
+ * 
+ * -- Usage --
+ * const result = await ..;
+ * Unpack(
+ *  result,
+ *  () => {}
+ * );
+ */
+function Unpack (
+    pack: PackParam, 
+    callback: (params?: any) => any,
+    errorCallback?: (params?: any) => any,
+) {
     try {
-        return fetch(url, options)
-        .then(checkStatus)
-        .then((response: any) => response.json())
-        .then((responseJson: any) => {
-          ConsoleUtil(responseJson, '响应报文');
-          try {
-            if (callback) {
-                callback(responseJson);
+        if (pack.code && pack.code === '10000') {
+            /**
+             * @param `返回成功`
+             */
+            callback();
+        } else {
+            /**
+             * @param `服务器返回失败`
+             */
+            if (errorCallback) {
+                errorCallback();
             }
-            return responseJson;
-          } catch (error) {
-            Base.toastFail('系统异常');
-            ConsoleUtil(error, '错误信息');
-            errorCallback(error);
-            return error;
-          }
-        })
-        .catch((err: any) => {
-            Base.toastFail('网络异常');
-            errorCallback(err);
-        })
-        .catch((e: ConstructErrorResponse) => {
-            if (e.status === 401) {
-                history.push('/exception/401');
-                return;
-            }
-            if (e.status === 403) {
-                history.push('/exception/403');
-                return;
-            }
-            if (e.status <= 504 && e.status >= 500) {
-                history.push('/exception/500');
-                return;
-            }
-            if (e.status >= 404 && e.status < 422) {
-                history.push('/exception/404');
-                return;
-            }
-        });
+            throw new Error('code !== 10000 拆包失败');
+        }
     } catch (error) {
-        console.log('error: ', error);
-        Base.toastFail('网络异常');
-        return error;
+        ConsoleUtil(pack, `${error.message}`);
     }
+}
+
+export { 
+    ConsoleUtil,
+    Unpack,
 };
-export { ConsoleUtil, payRequest };
 
 export default request;

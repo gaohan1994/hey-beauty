@@ -23,7 +23,7 @@ import NotFound from './container/exception/NotFound';
 
 import Home from './container/Home';
 import About from './container/About';
-import Selected from './container/Selected';
+// import Selected from './container/Selected';
 
 /**
  * @param title -- 网页 title
@@ -82,8 +82,7 @@ const RouterConfig = ({ }: DocumentTitleProps) => {
         >   
             <Route path="/" exact={true} render={() => renderRouteLayout(App, '/')} />
             <Route path="/home" render={() => renderRouteLayout(Home, '/home')} /> 
-            <Route path="/about" render={() => renderRouteLayout(About, '/about')} /> 
-            <Route path="/selected" render={() => renderRouteLayout(Selected, '/selected')} /> 
+            <Route path="/about" render={() => renderRouteLayout(About, '/about')} />
 
             <Route component={NotFound}/>
         </AnimatedSwitch>

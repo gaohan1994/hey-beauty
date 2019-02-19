@@ -14,7 +14,7 @@ export type Status = {
 export const initState = {
   showLogin: false,
   loading: false,
-  currentRoute: 'home',
+  currentRoute: '',
 };
 
 /**

@@ -10,40 +10,20 @@ import createLogger from 'redux-logger';
 import thunk from 'redux-thunk';
 import rootReducer from './index';
 import status, { Status, initState as statusState } from './status';
-// import sign, { Sign, initState as signState } from './sign';
-// import menu, { Menu, initState as menuState } from './menu';
-// import order, { Order, initState as orderState } from './order';
-// import table, { Table, initState as tableState } from './table';
-// import business, { Business, initState as businessState } from './business';
-// import cart, { Cart, initState as cartState } from './cart';
+import product, { Product, initState as ProductState } from './product';
 export interface Stores {
   status: Status;
-  // sign: Sign;
-  // menu: Menu;
-  // order: Order;
-  // table: Table;
-  // business: Business;
-  // cart: Cart;
+  product: Product;
 }
 
 export const StoreState = {
   status: statusState,
-  // sign: signState,
-  // menu: menuState,
-  // order: orderState,
-  // table: tableState,
-  // business: businessState,
-  // cart: cartState,
+  product: ProductState,
 };
 
 export default combineReducers({
   status,
-  // sign,
-  // menu,
-  // order,
-  // table,
-  // business,
-  // cart,
+  product,
 });
 
 const configureStore = () => {

@@ -17,6 +17,17 @@ const strategies = {
   },
 };
 
+/**
+ * @param `校验类`
+ * 
+ * @param `Usage`
+ * 
+ * `const helper = new Validator()`
+ * `helper.add(...)`
+ * `const result = helper.start()`
+ * `if (result) { error here } else { pass success } `
+ */
+
 class Validator {
   
   private cache: any;
