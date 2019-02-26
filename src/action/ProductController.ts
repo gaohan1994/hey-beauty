@@ -4,6 +4,7 @@ import { Unpack } from '../common/request';
 import { 
   RECEIVE_PRODUCT_LIST,
   RECEIVE_PRODUCT_INFOS,
+  RECEIVE_CURRENT_PRODUCT,
 } from '../constants';
 
 class ProductController {
@@ -31,6 +32,20 @@ class ProductController {
           page: param.page_index,
           productInfos: result.biz_content.product_list,
         }
+      });
+    });
+  }
+
+  public getProductDetailInf = async (params: DispatchAbstract<any>): Promise<any> => {
+    const { dispatch, param } = params;
+
+    const result = await ProductService.getProductDetailInf(param);
+    console.log('result: ', result);
+
+    Unpack(result, async () => {
+      dispatch({
+        type: RECEIVE_CURRENT_PRODUCT,
+        payload: { currentProduct: result.biz_content }
       });
     });
   }

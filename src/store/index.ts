@@ -11,19 +11,32 @@ import thunk from 'redux-thunk';
 import rootReducer from './index';
 import status, { Status, initState as statusState } from './status';
 import product, { Product, initState as ProductState } from './product';
+import post, { Post, initState as PostState } from './post';
+import cart, { Cart, initState as CartState } from './cart';
+import user, { User, initState as UserState } from './user';
+
 export interface Stores {
   status: Status;
   product: Product;
+  post: Post;
+  cart: Cart;
+  user: User;
 }
 
 export const StoreState = {
   status: statusState,
   product: ProductState,
+  post: PostState,
+  cart: CartState,
+  user: UserState,
 };
 
 export default combineReducers({
   status,
   product,
+  post,
+  cart,
+  user,
 });
 
 const configureStore = () => {

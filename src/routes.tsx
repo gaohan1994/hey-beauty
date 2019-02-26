@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react';
-import { Route, Router } from 'react-router-dom';
+import { Route, Router, RouteComponentProps } from 'react-router-dom';
 import { AnimatedSwitch } from 'react-router-transition';
 import { connect } from 'react-redux';
 import config from './common/config';
@@ -23,7 +23,14 @@ import NotFound from './container/exception/NotFound';
 
 import Home from './container/Home';
 import About from './container/About';
-// import Selected from './container/Selected';
+import Product from './container/Product';
+import User from './container/User';
+import Post from './container/Post';
+import Posts from './container/Posts';
+import Sign from './container/Sign';
+import Register from './container/Register';
+
+import { ProductsCart } from './component/Cartbar';
 
 /**
  * @param title -- 网页 title
@@ -35,10 +42,19 @@ export interface DocumentTitleProps {
   
 }
 
-export function renderRouteLayout (Component: any, route: string): React.ReactNode {
+const CommonComponent = () => {
+  return (
+    <div>
+      <ProductsCart />
+    </div>
+  );
+};
+
+export function renderRouteLayout (Component: any, route: string, rest?: any): React.ReactNode {
   return (
     <BasicLayout>
-      <Component />
+      <CommonComponent />
+      <Component {...rest} />
     </BasicLayout>
   );
 }
@@ -80,11 +96,16 @@ const RouterConfig = ({ }: DocumentTitleProps) => {
             };
           }}
         >   
-            <Route path="/" exact={true} render={() => renderRouteLayout(App, '/')} />
-            <Route path="/home" render={() => renderRouteLayout(Home, '/home')} /> 
-            <Route path="/about" render={() => renderRouteLayout(About, '/about')} />
-
-            <Route component={NotFound}/>
+          <Route path="/" exact={true} render={() => renderRouteLayout(App, '/')} />
+          <Route path="/home" render={() => renderRouteLayout(Home, '/home')} /> 
+          <Route path="/about" render={() => renderRouteLayout(About, '/about')} />
+          <Route path="/product/:id" render={(props: RouteComponentProps<any>) => renderRouteLayout(Product, '/product/:id', props)} />
+          <Route path="/user/:id" render={(props: RouteComponentProps<any>) => renderRouteLayout(User, '/user/:id', props)} />
+          <Route path="/posts" render={(props: RouteComponentProps<any>) => renderRouteLayout(Posts, '/posts', props)} />
+          <Route path="/post/:id" render={(props: RouteComponentProps<any>) => renderRouteLayout(Post, '/post/:id', props)} />
+          <Route path="/sign" component={Sign} />
+          <Route path="/register" component={Register} />
+          <Route component={NotFound}/>
         </AnimatedSwitch>
       </Router>
     </DocumentTitle>

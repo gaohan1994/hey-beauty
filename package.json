@@ -6,7 +6,7 @@
     "@types/classnames": "^2.2.7",
     "@types/react-css-modules": "^4.6.2",
     "@types/react-motion": "^0.0.27",
-    "antd": "^3.10.1",
+    "antd": "^3.13.5",
     "antd-mobile": "^2.2.3",
     "autoprefixer": "7.1.6",
     "babel-jest": "^22.1.0",

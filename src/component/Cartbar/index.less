@@ -1,0 +1,45 @@
+@import  "../../global.less";
+
+@cart-prefix: 'cartControl';
+
+@cart-height: 50px;
+@cart-width: 300px;
+@cart-border-radius-base: @cart-height / 2;
+@cart-position-width: 20px;
+@cart-item-size: 50px;
+
+.cart-size (@height, @width, @border-radius) {
+  height: @height;
+  width: @width;
+  border-radius: @border-radius;
+}
+
+.cartControl {
+  background: @component-background;
+  position: fixed;
+  bottom: @cart-position-width;
+  right: @cart-position-width;
+  .cart-size(@cart-height, @cart-width, @cart-border-radius-base);
+  .display-flex(center, start);
+  z-index: 999;
+}
+
+.cartItemImg {
+  width: @cart-item-size;
+  height: @cart-item-size;
+}
+
+.description {
+  .display-flex(center, between);
+}
+
+.cartbar {
+  margin-top: 15px;
+  width: 100%;
+}
+
+.pCart {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+}

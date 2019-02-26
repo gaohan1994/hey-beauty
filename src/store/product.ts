@@ -1,6 +1,7 @@
 import {
   RECEIVE_PRODUCT_LIST,
   RECEIVE_PRODUCT_INFOS,
+  RECEIVE_CURRENT_PRODUCT,
 } from '../constants';
 import { Stores } from './index';
 import Actions from '../action';
@@ -9,11 +10,13 @@ import numeral from 'numeral';
 export type Product = {
   productTypeList: any[];
   productInfos: any[];
+  currentProduct: any;
 };
 
 export const initState = {
   productTypeList: [],
   productInfos: [],
+  currentProduct: {},
 };
 
 /**
@@ -26,6 +29,15 @@ export const initState = {
  */
 export default function product (state: Product = initState,  action: Actions): Product {
   switch (action.type) {
+
+    case RECEIVE_CURRENT_PRODUCT:
+      const { payload: { currentProduct } } = action;
+      state = {
+        ...state,
+        currentProduct,
+      };
+      return state;
+
     case RECEIVE_PRODUCT_LIST:
       const { payload: { productTypeList } } = action;
 
@@ -58,6 +70,8 @@ export default function product (state: Product = initState,  action: Actions): 
     default: return state;
   }
 }
+
+export const getCurrentProduct = (state: Stores) => state.product.currentProduct;
 
 export const getProductTypeList = (state: Stores) => state.product.productTypeList;
 

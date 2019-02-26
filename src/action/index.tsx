@@ -3,6 +3,10 @@ import {
   CHANGE_ROUTE,
   RECEIVE_PRODUCT_LIST,
   RECEIVE_PRODUCT_INFOS,
+  RECEIVE_CURRENT_PRODUCT,
+  UPDATE_CART,
+  RECEIVE_POST_LIST,
+  RECEIVE_USERINFO,
 } from '../constants';
 import { Dispatch } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -12,7 +16,11 @@ export interface AbstractInterface {
     CHANGE_LOADING |
     CHANGE_ROUTE |
     RECEIVE_PRODUCT_LIST |
-    RECEIVE_PRODUCT_INFOS;
+    RECEIVE_PRODUCT_INFOS |
+    RECEIVE_CURRENT_PRODUCT |
+    UPDATE_CART |
+    RECEIVE_POST_LIST |
+    RECEIVE_USERINFO;
 
   payload: any;
 }

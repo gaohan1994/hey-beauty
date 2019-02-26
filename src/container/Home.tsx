@@ -6,9 +6,12 @@ import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 // import { Uploader } from '../component';
 import ProductController from '../action/ProductController';
-import { getProductTypeList } from '../store/product';
-import { Tabs } from 'antd';
+import { getProductTypeList, getProductInfos } from '../store/product';
+import { Tabs, Card } from 'antd';
 import config from '../common/config';
+import history from '../history';
+
+const { Meta } = Card;
 
 /**
  * @param {CURRENTPAGE} 当前页
@@ -21,6 +24,7 @@ const { TabPane } = Tabs;
 interface HomeProps {
   dispatch: Dispatch<any>;
   productTypeList: any[];
+  productInfos: any[];
 }
 
 interface HomeState { }
@@ -99,16 +103,39 @@ class Home extends Component<HomeProps, HomeState> {
     );
   }
 
+  private onCardClickHandle = (item: any) => {
+    history.push(`/product/${item.product_id}`);
+  }
+
   private renderTabContent = (): JSX.Element => {
-    const { } = this.props;
+    const { productInfos } = this.props;
     return (
-      <div>renderTabContent</div>
+      <div>
+        {
+          productInfos && productInfos.length > 0 ? productInfos.map((item: any) => {
+            return (
+              <Card
+                onClick={() => this.onCardClickHandle(item)}
+                key={item.product_id}
+                hoverable={true}
+                style={{width: 240}}
+                cover={<img alt="card cover" src={item.product_logo_address} />}
+              >
+                <Meta title={item.product_name} />
+              </Card>
+            );
+          }) : (
+            <div>空</div>
+          )
+        }
+      </div>
     );
   }
 }
 
 const mapStateToProps = (state: Stores) => ({
   productTypeList: getProductTypeList(state),
+  productInfos: getProductInfos(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({

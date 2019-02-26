@@ -9,8 +9,10 @@ import { configureStore } from './store';
 import { Provider } from 'react-redux';
 import RouterConfig from './routes';
 
+export const store = configureStore();
+
 ReactDOM.render(
-  <Provider store={configureStore()}>
+  <Provider store={store}>
     <RouterConfig />
   </Provider>,
   document.getElementById('root') as HTMLElement
