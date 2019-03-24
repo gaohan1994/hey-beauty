@@ -53,12 +53,12 @@ const defaultCommonConfig: DefaultCommonConfig = {
 // 测试环境 http://202.101.149.132:7680/BKMS_HMS/GateWayAction.do
 const devConfig: InterfaceConfig = {
   ...defaultCommonConfig,
-  FETCH_ENTRY: 'http://192.168.31.51:8080',
+  FETCH_ENTRY: 'http://ww5gzn.natappfree.cc',
 };
 
 const proConfig: InterfaceConfig = {
   ...defaultCommonConfig,
-  FETCH_ENTRY: 'http://192.168.31.51:8080',
+  FETCH_ENTRY: 'http://ww5gzn.natappfree.cc',
 };
 
 interface ProcessChoiceFilterFunc<T> {

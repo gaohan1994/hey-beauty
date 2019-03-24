@@ -13,6 +13,18 @@ class PostService {
       }
     );
   }
+
+  public postDetail = (params: any) => {
+    return request(
+      `${config.FETCH_ENTRY}/order/getPostDetail`,
+      'POST',
+      {
+        biz_content: {
+          ...params
+        }
+      }
+    );
+  }
 }
 
 export default new PostService();

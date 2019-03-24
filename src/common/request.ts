@@ -218,6 +218,17 @@ export interface PackParam {
     msg?: any;
 }
 
+function UnpackPromise ( pack: PackParam ): Promise<any> {
+    return new Promise((resolve, reject) => {
+
+        if (pack.code && pack.code === '10000') {
+            resolve(pack);
+        } else {
+            resolve(pack);
+        }
+    });
+}
+
 /**
  * @param `拆包用`
  * 
@@ -256,6 +267,7 @@ function Unpack (
 export { 
     ConsoleUtil,
     Unpack,
+    UnpackPromise,
 };
 
 export default request;

@@ -9,7 +9,7 @@ import Actions from '../action/index';
 import StatusController, { ChangeRouteI } from 'src/action/StatusController';
 import { DispatchAbstract } from '../action/index';
 
-const { Header, Footer, Content } = Layout;
+const { Header, Content } = Layout;
 
 const { Item } = Menu;
 
@@ -36,18 +36,12 @@ class BasicLayout extends Component<BasicLayoutProps, BasicLayoutState> {
     return (
       <Layout>
         <Header className={classnames(styles.layoutHeader)} >
-          {this.renderTitle()}
+          {/* {this.renderTitle()} */}
           {this.renderMenu()}
         </Header>
-        <Content>{this.props.children}</Content>
-        <Footer>Footer</Footer>
+        <Content style={{backgroundColor: '#ffffff'}} >{this.props.children}</Content>
+        {/* <Footer>Footer</Footer> */}
       </Layout>
-    );
-  }
-
-  private renderTitle = () => {
-    return (
-      <div className={classnames(styles.title, styles.mr)}>Hey-Beauty</div>
     );
   }
 

@@ -41,12 +41,12 @@ class SignController {
          * @param `3.`
          */
         console.log(result);
-        Dialog.showToast('登录成功');
+        Dialog.showToast('注册成功');
         const loginPayload: DispatchAbstract<any> = {
           dispatch: params.dispatch,
           param: {
-            user_id: param.user_id,
-            passwd: param.passwd,
+            user_id: param.username,
+            passwd: param.password,
           }
         };
 
@@ -60,6 +60,7 @@ class SignController {
 
   public login = async (params: DispatchAbstract<any, any>) => {
     const { param, dispatch, option } = params;
+    console.log('param: ', param);
     const result = await SignService.login(param);
     const callback = option && option.callback;
 

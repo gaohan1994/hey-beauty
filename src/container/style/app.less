@@ -1,0 +1,42 @@
+
+@app-prefix-cls: ~'app-prefix';
+
+.@{app-prefix-cls} {
+  flex: 1;
+  height: calc(100vh - 48px);
+  width: 100%;
+  display: flex;
+  background: #ffffff;
+
+  &-left, &-right {
+    flex: 1;
+    display: flex;
+    box-sizing: border-box;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &-left {
+
+    &-title {
+      display: block;
+      font-size: 48px;
+      font-weight: bold;
+    }
+
+    &-img {
+      width: 248px;
+      height: 16px;
+      // display: block;
+    }
+  }
+
+  &-right {
+    &-img {
+      width: 500px;
+      height: 300px;
+      min-height: 260px;
+    }
+  }
+}

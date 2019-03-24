@@ -32,10 +32,10 @@ class Sign extends Component<Props, State> {
           }
         };
         console.log('payload: ', payload);
-        // SignController.login(payload);
-        SignController.loginAuth().then((res: any) => {
-          console.log('res: ', res);
-        });
+        SignController.login(payload);
+        // SignController.loginAuth().then((res: any) => {
+        //   console.log('res: ', res);
+        // });
       }
     });
   }

@@ -35,6 +35,10 @@ export type MyDispatch = ThunkDispatch<any, any, any> | Dispatch<Actions>;
  * @param `抽象参数接口`
  */
 
+export interface AbstractParams<T extends Object> {
+   param: T;
+}
+
 export interface DispatchAbstract<T extends Object = {}> {
   param: T;
   dispatch: MyDispatch;

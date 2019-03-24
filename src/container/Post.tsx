@@ -12,6 +12,10 @@ import { mergeProps } from '../common/config';
 import { Stores } from '../store/index';
 // import { DispatchAbstract } from '../action/index';
 import { RouteComponentProps } from 'react-router';
+import { AbstractParams } from '../action';
+import PostController from '../action/PostController';
+import SignController from '../action/SignController';
+import history from '../history';
 
 interface PostProps extends RouteComponentProps<any> {
   dispatch: Dispatch;
@@ -22,7 +26,22 @@ interface PostState {}
 class Post extends React.Component<PostProps, PostState> {
 
   componentDidMount = () => {
-    // const { dispatch, match: { params: { id } } } = this.props;
+    const { match: { params: { id } } } = this.props;
+
+    SignController.loginAuth().then(({login}) => {
+
+      if (login === true) {
+
+        const payload: AbstractParams<any> = {
+          param: {
+            post_id: id,
+          }
+        };
+        PostController.postDetail(payload);
+      } else {
+        history.push('/sign');
+      }
+    });
   }
 
   public render() {
