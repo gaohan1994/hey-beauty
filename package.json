@@ -18,6 +18,7 @@
     "css-loader": "0.28.7",
     "dotenv": "4.0.0",
     "dotenv-expand": "4.2.0",
+    "dplayer": "^1.25.0",
     "extract-text-webpack-plugin": "3.0.2",
     "file-loader": "0.11.2",
     "fork-ts-checker-webpack-plugin": "^0.2.8",
@@ -40,6 +41,7 @@
     "react-document-title": "^2.0.3",
     "react-dom": "^16.4.2",
     "react-motion": "^0.5.2",
+    "react-player": "^1.11.0",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
     "react-router-transition": "^1.2.1",
@@ -70,6 +72,7 @@
     "test": "node scripts/test.js --env=jsdom"
   },
   "devDependencies": {
+    "@types/dplayer": "^1.25.0",
     "@types/history": "^4.7.0",
     "@types/jest": "^23.3.1",
     "@types/lodash": "^4.14.116",

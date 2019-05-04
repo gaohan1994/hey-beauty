@@ -30,7 +30,7 @@ import Posts from './container/Posts';
 import Sign from './container/Sign';
 import Register from './container/Register';
 
-import { ProductsCart } from './component/Cartbar';
+// import { ProductsCart } from './component/Cartbar';
 import Update from './container/Update';
 
 /**
@@ -46,7 +46,7 @@ export interface DocumentTitleProps {
 const CommonComponent = () => {
   return (
     <div>
-      <ProductsCart />
+      {/* <ProductsCart /> */}
     </div>
   );
 };

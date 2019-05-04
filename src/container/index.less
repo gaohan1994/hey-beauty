@@ -5,9 +5,14 @@
   flex-direction: column;
 }
 
+.home {
+  padding-bottom: 15px;
+}
+
 .container {
   width: 100%;
   height: 100%;
+  overflow: auto;
 }
 
 .input {
@@ -24,6 +29,8 @@
   width: 850px;
   margin: 0 auto;
   min-height: 600px;
+  background: #fff;
+  overflow: auto;
 }
 
 .pLeft {
@@ -40,6 +47,10 @@
   margin-top: 20px;
 }
 
-.pLeft::after, .pRight::after {
+.pLeft::after, .pRight::after, .container::after {
   .clear-float();
+}
+
+.padb {
+  padding-bottom: 80px;
 }

@@ -15,6 +15,7 @@ interface CartbarProps {
   currentProductAuth: any;
   dispatch: Dispatch;
   currentProduct: any;
+  showToken: boolean;
   addProduct: (params?: any) => any;
   reduceProduct: (params?: any) => any;
 }
@@ -44,37 +45,44 @@ class Cartbar extends Component<CartbarPropsPartialProps, CartbarState> {
   }
 
   render() {
-    const { currentProductAuth } = this.props;
+    const { currentProductAuth, showToken } = this.props;
     console.log('this.props', this.props);
     console.log('currentProductAuth: ', currentProductAuth);
-    return (
-      <div className={styles.cartbar}>
-        {
-          currentProductAuth && currentProductAuth.product_id ? (
-            <div>
-              <Button shape="circle" icon="minus" type="primary" onClick={this.onReduceClickHandle} />
-              <span style={{padding: '0 20px'}}>{currentProductAuth.number}</span>
-              <Button shape="circle" icon="plus" type="primary" onClick={this.onAddClickHandle} />
-            </div>
-          ) : (
-            <Button 
-              type="primary"
-              shape="round"
-              icon="plus"
-              size="default"
-              onClick={this.onAddClickHandle}
-            >
-              加入购物车
-            </Button>
-          )
-        }
-      </div>
-    );
+
+    if (showToken === true) {
+      return (
+        <div className={styles.cartbar}>
+          {
+            currentProductAuth && currentProductAuth.product_id ? (
+              <div>
+                <Button shape="circle" icon="minus" type="primary" onClick={this.onReduceClickHandle} />
+                <span style={{padding: '0 20px'}}>{currentProductAuth.number}</span>
+                <Button shape="circle" icon="plus" type="primary" onClick={this.onAddClickHandle} />
+              </div>
+            ) : (
+              <Button 
+                type="primary"
+                shape="round"
+                icon="plus"
+                size="default"
+                onClick={this.onAddClickHandle}
+              >
+                加入购物车
+              </Button>
+            )
+          }
+        </div>
+      );
+    } else {
+      return null;
+    }
   }
 }
 
-const mapStateToProps = (state: Stores) => {
+const mapStateToProps = (state: Stores, ownProps: CartbarPropsPartialProps) => {
   const currentProduct = getCurrentProduct(state);
+  const showToken = window.location.href.indexOf('product') === -1 ? false : true;
+  console.log('showToken: ', showToken);
   return {
     // list: GetCartList(state),
     // currentAuth: SignController.checkLocalLoginAuth(state),
@@ -84,6 +92,7 @@ const mapStateToProps = (state: Stores) => {
       currentProduct.product_id 
       ? GetCurrentCartProduct(state, currentProduct.product_id) 
       : {},
+    showToken
   };
 };
 

@@ -1,7 +1,7 @@
 import PostService from '../service/PostService';
 import { DispatchAbstract, AbstractParams } from './index';
 import { Unpack, UnpackPromise } from '../common/request';
-import { RECEIVE_POST_LIST } from '../constants';
+import { RECEIVE_POST_LIST, RECEIVE_POST_DETAIL } from '../constants';
 import { store } from '../index';
 class PostController {
 
@@ -23,19 +23,18 @@ class PostController {
 
   public postDetail = async (params: AbstractParams<any>): Promise<any> => {
     const { param } = params;
-    
     const state = store.getState();
-
     const payload: AbstractParams<any> = {
       ...param,
-      user_id: state.user.userinfo && state.user.userinfo.user_id
+      user_id: state.user.userinfo && state.user.userinfo.user_id || ''
     };
     console.log('payload: ', payload);
     const result = await PostService.postDetail(payload);
 
     UnpackPromise(result).then((res) => {
       store.dispatch({
-        type: '',
+        type: RECEIVE_POST_DETAIL,
+        payload: { postDetail: result.biz_content }
       });
     });
   }

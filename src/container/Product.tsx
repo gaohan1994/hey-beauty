@@ -16,7 +16,8 @@ import ProductController from '../action/ProductController';
 import { getCurrentProduct } from '../store/product';
 import { Card, Avatar, Statistic, Row, Col, Icon } from 'antd';
 import classnames from 'classnames';
-import { Cartbar } from '../component/Cartbar';
+import { Cartbar, ProductsCart } from '../component/Cartbar';
+// import styles from './style'
 
 const { Meta } = Card;
 
@@ -43,15 +44,25 @@ class Product extends React.Component<ProductProps, ProductState> {
   public render() {
     const { currentProduct } = this.props;
     return (
-      <div className={classnames(styles.pContainer, styles.pCenter)}>
+      <div className={classnames(styles.pContainer, styles.pCenter, styles.home)}>
         <Card
           style={{width: 500, marginTop: 20}}
           hoverable={true}
-          cover={<img alt="product card cover" src={currentProduct.product_logo_address} />}
+          // cover={<img alt="product card cover" src={currentProduct.product_logo_address} />}
+          cover={<img alt="product card cover" src={'http://ci.xiaohongshu.com/e1ac4cb4-c422-5872-b295-87cef35ec781?imageView2/2/w/1080/format/jpg'} />}
         >
           <Meta
             title={currentProduct.product_name} 
-            avatar={<Avatar size="large" style={{backgroundColor: '#ffbf00', verticalAlign: 'middle'}}>X</Avatar>}
+            avatar={
+              <Avatar 
+                size="large" 
+                style={{
+                    backgroundColor: '#ffbf00', 
+                    verticalAlign: 'middle'
+                }} 
+                src="http://ci.xiaohongshu.com/e1ac4cb4-c422-5872-b295-87cef35ec781?imageView2/2/w/1080/format/jpg"
+              />
+            }
             description="description"
           />
         </Card>
@@ -80,6 +91,8 @@ class Product extends React.Component<ProductProps, ProductState> {
         </Row>
         <Cartbar />
         </Card>
+
+        <ProductsCart />
       </div>
     );
   }

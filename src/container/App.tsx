@@ -11,6 +11,7 @@ import { Dispatch } from 'redux';
 import { mergeProps } from '../common/config';
 import { Stores } from '../store/index';
 import classnames from 'classnames';
+import SignController from '../action/SignController';
 
 interface AppProps {
   dispatch?: Dispatch;
@@ -18,6 +19,14 @@ interface AppProps {
 interface AppState {}
 
 class App extends React.Component<AppProps, AppState> {
+
+  componentDidMount = () => {
+    this.init();
+  }
+ 
+  public init = async () => {
+    await SignController.updateUserinfo();
+  }
 
   public render() {
     return (

@@ -5,6 +5,7 @@ import Dialog from '../component/Dialog';
 import { RECEIVE_USERINFO } from '../constants';
 import history from '../history';
 import { store } from '../index';
+import config from '../common/config';
 
 class SignController {
 
@@ -59,7 +60,7 @@ class SignController {
   }
 
   public login = async (params: DispatchAbstract<any, any>) => {
-    const { param, dispatch, option } = params;
+    const { param, option } = params;
     console.log('param: ', param);
     const result = await SignService.login(param);
     const callback = option && option.callback;
@@ -68,14 +69,7 @@ class SignController {
       result, 
       () => {
         Dialog.showToast('登录成功');
-        
-        dispatch({
-          type: RECEIVE_USERINFO,
-          payload: {
-            userinfo: result.biz_content
-          }
-        });
-        
+        this.saveUserinfo(result.biz_content);
         if (callback) {
           callback({ success: true, userinfo: result.biz_content });
         } else {
@@ -91,6 +85,28 @@ class SignController {
       }
     );
     console.log('result: ', result);
+  }
+
+  public saveUserinfo = async (userinfo: any) => {
+    const userinfoStand = typeof userinfo === 'string' ? userinfo : JSON.stringify(userinfo);
+    localStorage.setItem(config.STORAGE_USERINFO, userinfoStand);
+
+    this.updateUserinfo();
+  }
+
+  /**
+   * @todo 在 redux 中对 storage 的数据进行二次存储并且在改变 storage 数据之后调用响应函数即可
+   * @param {updateUserinfo} 对应userinfo
+   * @memberof Business
+   */
+  public updateUserinfo = async (): Promise<any> => {
+    const userinfo = JSON.parse(localStorage.getItem(config.STORAGE_USERINFO) || `{}`);
+    store.dispatch({
+      type: RECEIVE_USERINFO,
+      payload: { userinfo: userinfo || { } }
+    });
+    console.log('updateUserinfo !!', userinfo);
+    return userinfo || {};
   }
 }
 

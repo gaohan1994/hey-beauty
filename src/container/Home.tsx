@@ -7,11 +7,12 @@ import { connect } from 'react-redux';
 // import { Uploader } from '../component';
 import ProductController from '../action/ProductController';
 import { getProductTypeList, getProductInfos } from '../store/product';
-import { Tabs, Card } from 'antd';
+import { Tabs, Card, Skeleton, Icon } from 'antd';
 import config from '../common/config';
 import history from '../history';
-
-const { Meta } = Card;
+import styles from './style/post.less';
+import classnames from 'classnames';
+import { ProductsCart } from '../component/Cartbar';
 
 /**
  * @param {CURRENTPAGE} 当前页
@@ -110,7 +111,8 @@ class Home extends Component<HomeProps, HomeState> {
   private renderTabContent = (): JSX.Element => {
     const { productInfos } = this.props;
     return (
-      <div>
+      <div className={styles['centerm-posts']}>
+        <div className={classnames(styles['centerm-cards'])}>
         {
           productInfos && productInfos.length > 0 ? productInfos.map((item: any) => {
             return (
@@ -118,16 +120,34 @@ class Home extends Component<HomeProps, HomeState> {
                 onClick={() => this.onCardClickHandle(item)}
                 key={item.product_id}
                 hoverable={true}
-                style={{width: 240}}
-                cover={<img alt="card cover" src={item.product_logo_address} />}
+                className={classnames(styles['centerm-card'])}
+                // cover={<img alt="card cover" src={item.product_logo_address} />}
+                cover={<img src="http://ci.xiaohongshu.com/e1ac4cb4-c422-5872-b295-87cef35ec781?imageView2/2/w/1080/format/jpg"/>}
               >
-                <Meta title={item.product_name} />
+                <Skeleton loading={!(item && item.product_id)} >
+                  <div className={styles['centerm-card-meta']}>
+                    <h3 className={styles['centerm-card-meta-title']}>{item.product_name}</h3>
+
+                    <div className={styles['centerm-card-meta-info']}>
+                      <div className={styles['centerm-card-meta-item']}>
+                        <Icon type="money-collect" />
+                        <span className={styles['centerm-card-meta-name']}>{item.product_price}</span>
+                      </div>
+                      <div className={styles['centerm-card-meta-item']}>
+                        <Icon type="heart" />
+                        <span className={styles['centerm-card-meta-name']}>{item.product_inventory}</span>
+                      </div>
+                    </div>
+                  </div>
+                </Skeleton>
               </Card>
             );
           }) : (
             <div>空</div>
           )
         }
+        </div>
+        <ProductsCart />
       </div>
     );
   }

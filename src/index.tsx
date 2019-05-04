@@ -8,8 +8,11 @@ import * as ReactDOM from 'react-dom';
 import { configureStore } from './store';
 import { Provider } from 'react-redux';
 import RouterConfig from './routes';
+import SignController from './action/SignController';
 
 export const store = configureStore();
+
+SignController.updateUserinfo();
 
 ReactDOM.render(
   <Provider store={store}>

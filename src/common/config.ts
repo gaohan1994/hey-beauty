@@ -34,6 +34,7 @@ export interface DefaultCommonConfig {
   STORE_DISH_CART_TYPE: string;
   DEFAULT_TERMINAL_CD: string;
   DEFAULT_TERMINAL_SN: string;
+  STORAGE_USERINFO: string;
 }
 
 const defaultCommonConfig: DefaultCommonConfig = {
@@ -48,17 +49,18 @@ const defaultCommonConfig: DefaultCommonConfig = {
   STORE_DISH_CART_TYPE: 'cart',
   DEFAULT_TERMINAL_CD: '00001104D1V0670019908',
   DEFAULT_TERMINAL_SN: 'FB485E065EEEF191EE1E9ED8BA157A0DA65D6EBA812A4D29',
+  STORAGE_USERINFO: 'XIAOHONGSHU_USERINFO'
 };
 
 // 测试环境 http://202.101.149.132:7680/BKMS_HMS/GateWayAction.do
 const devConfig: InterfaceConfig = {
   ...defaultCommonConfig,
-  FETCH_ENTRY: 'http://ww5gzn.natappfree.cc',
+  FETCH_ENTRY: 'http://zhouminghui.natapp1.cc',
 };
 
 const proConfig: InterfaceConfig = {
   ...defaultCommonConfig,
-  FETCH_ENTRY: 'http://ww5gzn.natappfree.cc',
+  FETCH_ENTRY: 'http://zhouminghui.natapp1.cc',
 };
 
 interface ProcessChoiceFilterFunc<T> {

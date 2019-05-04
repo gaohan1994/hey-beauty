@@ -16,7 +16,7 @@ class PostService {
 
   public postDetail = (params: any) => {
     return request(
-      `${config.FETCH_ENTRY}/order/getPostDetail`,
+      `${config.FETCH_ENTRY}/app/getPostDetail`,
       'POST',
       {
         biz_content: {
