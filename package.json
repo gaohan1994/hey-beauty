@@ -25,6 +25,7 @@
     "fs-extra": "3.0.1",
     "history": "^4.7.2",
     "html-webpack-plugin": "2.29.0",
+    "invariant": "^2.2.4",
     "jest": "22.4.2",
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
@@ -74,6 +75,7 @@
   "devDependencies": {
     "@types/dplayer": "^1.25.0",
     "@types/history": "^4.7.0",
+    "@types/invariant": "^2.2.29",
     "@types/jest": "^23.3.1",
     "@types/lodash": "^4.14.116",
     "@types/node": "^10.9.4",

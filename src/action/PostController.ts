@@ -1,7 +1,7 @@
 import PostService from '../service/PostService';
 import { DispatchAbstract, AbstractParams } from './index';
 import { Unpack, UnpackPromise } from '../common/request';
-import { RECEIVE_POST_LIST, RECEIVE_POST_DETAIL } from '../constants';
+import { RECEIVE_POST_LIST, RECEIVE_POST_DETAIL, RECEIVE_RECOMMEND_POST } from '../constants';
 import { store } from '../index';
 class PostController {
 
@@ -35,6 +35,18 @@ class PostController {
       store.dispatch({
         type: RECEIVE_POST_DETAIL,
         payload: { postDetail: result.biz_content }
+      });
+    });
+  }
+
+  public getRandomPosts = async () => {
+
+    const result = await PostService.getRandomPosts();
+
+    UnpackPromise(result).then((res) => {
+      store.dispatch({
+        type: RECEIVE_RECOMMEND_POST,
+        payload: { recommendPosts: result.biz_content.posts }
       });
     });
   }

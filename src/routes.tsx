@@ -32,6 +32,7 @@ import Register from './container/Register';
 
 // import { ProductsCart } from './component/Cartbar';
 import Update from './container/Update';
+import List from './container/Order/List';
 
 /**
  * @param title -- 网页 title
@@ -105,6 +106,7 @@ const RouterConfig = ({ }: DocumentTitleProps) => {
           <Route path="/posts" render={(props: RouteComponentProps<any>) => renderRouteLayout(Posts, '/posts', props)} />
           <Route path="/post/:id" render={(props: RouteComponentProps<any>) => renderRouteLayout(Post, '/post/:id', props)} />
           <Route path="/update" render={(props: RouteComponentProps<any>) => renderRouteLayout(Update, '/update', props)} />
+          <Route path="/list" render={(props: RouteComponentProps<any>) => renderRouteLayout(List, '/list', props)} />
           <Route path="/sign" component={Sign} />
           <Route path="/register" component={Register} />
           <Route component={NotFound}/>

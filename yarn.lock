@@ -46,6 +46,11 @@
   version "4.7.2"
   resolved "http://registry.npm.taobao.org/@types/history/download/@types/history-4.7.2.tgz#0e670ea254d559241b6eeb3894f8754991e73220"
 
+"@types/invariant@^2.2.29":
+  version "2.2.29"
+  resolved "https://registry.npm.taobao.org/@types/invariant/download/@types/invariant-2.2.29.tgz#aa845204cd0a289f65d47e0de63a6a815e30cc66"
+  integrity sha1-qoRSBM0KKJ9l1H4N5jpqgV4wzGY=
+
 "@types/jest@^23.3.1":
   version "23.3.14"
   resolved "http://registry.npm.taobao.org/@types/jest/download/@types/jest-23.3.14.tgz#37daaf78069e7948520474c87b80092ea912520a"

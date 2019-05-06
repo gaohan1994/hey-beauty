@@ -11,35 +11,68 @@ import SignController from '../action/SignController';
 import history from '../history';
 import { getPostDetail } from 'src/store/post';
 import moment from 'moment';
-import { Icon, Avatar, notification  } from 'antd';
+import { Icon, Avatar, notification, Comment as AntdComment, Tooltip } from 'antd';
 import pstyles from './style/post.less';
 import classnames from 'classnames';
 import ReactPlayer from 'react-player';
+import { getRecommendPosts } from '../store/post';
 
 export const Comment = ({ comment }: any) => {
-  const commentCls = 'comment';
+  // const commentCls = 'comment';
+  const actions: any[] = [
+    (
+      <span>
+        <Tooltip title="Like">
+          <Icon
+            type="like"
+            // onClick={this.like}
+          />
+        </Tooltip>
+        <span style={{ paddingLeft: 8, cursor: 'auto' }}>
+          {/* {likes} */}
+          0
+        </span>
+      </span>
+    ),
+    (
+      <span>
+        <Tooltip title="Dislike">
+          <Icon
+            type="dislike"
+            // onClick={this.dislike}
+          />
+        </Tooltip>
+        <span style={{ paddingLeft: 8, cursor: 'auto' }}>
+          {/* {dislikes} */}
+          1
+        </span>
+      </span>
+    ),
+    (
+      <span>Reply to</span>
+    ),
+  ];
   return (
-    <div className={pstyles[`${commentCls}`]} >
-      <div className={pstyles[`${commentCls}-info`]}>
-        <div className={pstyles[`${commentCls}-info-user`]}>
-          <div className={pstyles[`${commentCls}-info-user-avator`]}>
-            <img 
-              className={pstyles[`${commentCls}-info-user-avator-img`]}
-              src="//img.xiaohongshu.com/avatar/5cbf0c3a7d07960001e54863.jpg@80w_80h_90q_1e_1c_1x.jpg"
-            />
-          </div>
-          <div className={pstyles[`${commentCls}-info-user-info`]}>
-            <div className={pstyles[`${commentCls}-info-user-info-nickname`]}>
-              aaaa哦随便
-            </div>
-            <div className={pstyles[`${commentCls}-info-user-info-time`]}>
-              今天 09:07
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className={pstyles[`${commentCls}-content`]}>小姐姐，请问下，这个刷上保护层以后黏腻吗</div>
-    </div>
+    <AntdComment
+      actions={actions}
+      author={<a>Han Solo</a>}
+      avatar={(
+        <Avatar
+          src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+          alt="Han Solo"
+        />
+      )}
+      content={(
+        <p>We supply a series of design principles, practical patterns and high quality 
+          design resources (Sketch and Axure), to help people create their 
+          product prototypes beautifully and efficiently.</p>
+      )}
+      datetime={(
+        <Tooltip title={moment().format('YYYY-MM-DD HH:mm:ss')}>
+          <span>{moment().fromNow()}</span>
+        </Tooltip>
+      )}
+    />
   );
 };
 
@@ -85,12 +118,13 @@ export const Postrow = ({post}: any) => {
             display: 'block',
             width: '100%',
             height: '100%',
-            backgroundImage: `url("//ci.xiaohongshu.com/6f30d565-2b03-5445-aea7-a9e9fbf92524?imageView2/2/w/1080/format/jpg?imageView2/2/w/200/h/200/q/90")`
+            // backgroundImage: `url("//ci.xiaohongshu.com/6f30d565-2b03-5445-aea7-a9e9fbf92524?imageView2/2/w/1080/format/jpg?imageView2/2/w/200/h/200/q/90")`
+            backgroundImage: `url(${post.postCoverImgAddress})`,
           }} 
         />
       </div>
       <div style={ContentStyle}>
-        <span style={textStyle}>史上最良心7支口红全面试色💄红棕色，姨妈色</span>
+        <span style={textStyle}>{post.postName}</span>
       </div>
     </div>
   );
@@ -99,6 +133,7 @@ export const Postrow = ({post}: any) => {
 interface PostProps extends RouteComponentProps<any> {
   dispatch: Dispatch;
   postDetail: any;
+  recommendPosts: any[];
 }
 
 interface PostState {}
@@ -109,7 +144,7 @@ class Post extends React.Component<PostProps, PostState> {
     const { match: { params: { id } } } = this.props;
 
     SignController.loginAuth().then(({login}) => {
-
+      
       if (login === true) {
 
         const payload: AbstractParams<any> = {
@@ -118,6 +153,7 @@ class Post extends React.Component<PostProps, PostState> {
           }
         };
         PostController.postDetail(payload);
+        PostController.getRandomPosts();
       } else {
         history.push('/sign');
       }
@@ -256,7 +292,7 @@ class Post extends React.Component<PostProps, PostState> {
   }
 
   private renderOtherPosts = (): JSX.Element => {
-    const arr = new Array(8).fill({});
+    const { recommendPosts } = this.props;
 
     const creatorcls = 'centerm-card-creator';
     return (
@@ -264,9 +300,11 @@ class Post extends React.Component<PostProps, PostState> {
         <h3 className={pstyles['centerm-card-creator-title']}>相关笔记</h3>
         <div className={pstyles['centerm-card-creator-list']}>
           {
-            arr.map((a, index: number) => {
-              return <Postrow key={index} />;
+            recommendPosts && recommendPosts.length > 0
+            ? recommendPosts.map((post: any, index: number) => {
+              return <Postrow post={post} key={index} />;
             })
+            : null
           }
         </div>
         
@@ -304,7 +342,8 @@ class Post extends React.Component<PostProps, PostState> {
 const mapStateToProps = (state: Stores, ownProps: PostProps) => {
   const postDetail = getPostDetail(state, ownProps.match.params.id);
   return {
-    postDetail
+    postDetail,
+    recommendPosts: getRecommendPosts(state),
   };
 };
 

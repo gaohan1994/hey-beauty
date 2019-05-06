@@ -13,6 +13,18 @@ class OrderService {
       }
     );
   }
+
+  public orderList = async (params: any) => {
+    return request(
+      `${config.FETCH_ENTRY}/order/orderList`,
+      'post',
+      {
+        biz_content: {
+          ...params
+        }
+      }
+    );
+  }
 }
 
 export default new OrderService();

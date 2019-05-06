@@ -63,8 +63,8 @@ class BasicLayout extends Component<BasicLayoutProps, BasicLayoutState> {
         title: '精选商城',
       },
       {
-        key: 'about',
-        title: '关于我们',
+        key: 'list',
+        title: '我的订单',
       },
       {
         key: 'join',
