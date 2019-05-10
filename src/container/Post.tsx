@@ -11,11 +11,34 @@ import SignController from '../action/SignController';
 import history from '../history';
 import { getPostDetail } from 'src/store/post';
 import moment from 'moment';
-import { Icon, Avatar, notification, Comment as AntdComment, Tooltip } from 'antd';
+import { Icon, Avatar, notification, Comment as AntdComment, Tooltip, Form, Input, Button } from 'antd';
 import pstyles from './style/post.less';
 import classnames from 'classnames';
 import ReactPlayer from 'react-player';
 import { getRecommendPosts } from '../store/post';
+import { getUserinfo } from '../store/user';
+import invariant from 'invariant';
+
+const { TextArea } = Input;
+
+const Editor = ({
+  onChange, onSubmit, value,
+}: any) => (
+  <div>
+    <Form.Item>
+      <TextArea rows={4} onChange={onChange} value={value} />
+    </Form.Item>
+    <Form.Item>
+      <Button
+        htmlType="submit"
+        onClick={onSubmit}
+        type="primary"
+      >
+        评论
+      </Button>
+    </Form.Item>
+  </div>
+);
 
 export const Comment = ({ comment }: any) => {
   // const commentCls = 'comment';
@@ -44,18 +67,18 @@ export const Comment = ({ comment }: any) => {
         </Tooltip>
         <span style={{ paddingLeft: 8, cursor: 'auto' }}>
           {/* {dislikes} */}
-          1
+          0
         </span>
       </span>
     ),
     (
-      <span>Reply to</span>
-    ),
+      <span>回复数量{comment.comment_is_reply_comment}</span>
+    )
   ];
   return (
     <AntdComment
       actions={actions}
-      author={<a>Han Solo</a>}
+      author={<a>{comment.comment_send_user_name}</a>}
       avatar={(
         <Avatar
           src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
@@ -63,12 +86,10 @@ export const Comment = ({ comment }: any) => {
         />
       )}
       content={(
-        <p>We supply a series of design principles, practical patterns and high quality 
-          design resources (Sketch and Axure), to help people create their 
-          product prototypes beautifully and efficiently.</p>
+        <p>{comment.comment_content}</p>
       )}
       datetime={(
-        <Tooltip title={moment().format('YYYY-MM-DD HH:mm:ss')}>
+        <Tooltip title={moment(comment.comment_datetime).format('YYYY-MM-DD HH:mm:ss')}>
           <span>{moment().fromNow()}</span>
         </Tooltip>
       )}
@@ -134,11 +155,18 @@ interface PostProps extends RouteComponentProps<any> {
   dispatch: Dispatch;
   postDetail: any;
   recommendPosts: any[];
+  userinfo: any;
 }
 
-interface PostState {}
+interface PostState {
+  comment: string;
+}
 
 class Post extends React.Component<PostProps, PostState> {
+
+  state = {
+    comment: ''
+  };
 
   componentDidMount = () => {
     const { match: { params: { id } } } = this.props;
@@ -172,6 +200,63 @@ class Post extends React.Component<PostProps, PostState> {
       message: '查看更多',
       description: '暂无更多评论可以查看~',
     });
+  }
+
+  public changeComment = ({target: { value }}: any) => {
+    console.log('value: ', value);
+    this.setState({comment: value});
+  }
+
+  public handleSubmit = async () => {
+    const { postDetail, userinfo } = this.props;
+    try {
+      const params = {
+        param: {
+          post_id: postDetail.post_id,
+          send_login_name: userinfo.user_id,
+          comment_content: this.state.comment,
+          is_reply_comment: '0',
+        }
+      };
+  
+      const { success, result } = await PostController.addCommentInf(params); 
+  
+      invariant(
+        success,
+        result || ' '
+      );
+      
+      notification.success({message: '评论成功！'});
+      window.location.reload();
+    } catch (error) {
+      notification.warn({message: error.message});
+    }
+  }
+
+  public like = async () => {
+    const { postDetail, userinfo } = this.props;
+    try {
+      const payload: AbstractParams<any> = {
+        param: {
+          post_id: `${postDetail.post_id}`,
+          user_id: userinfo.user_id
+        }
+      };
+      console.log('payload: ', payload);
+      const { success, result } = await PostController.addLikeInf(payload);
+
+      invariant(
+        success,
+        result || ' '
+      );
+
+      notification.success({message: '点赞成功！'});
+    } catch (error) {
+      notification.warn({message: error.message});
+    }
+  }
+  public unLike = () => {
+    console.log('unlike');
   }
 
   public render() {
@@ -252,14 +337,26 @@ class Post extends React.Component<PostProps, PostState> {
           <p className={pstyles['centerm-text-p']} >购入某🍑，看图～</p>
         </div>
 
-        <div>
-          <div>
-            <Icon type="heart" />
-            <span>{1}</span>
+        <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+          <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+            <span style={{marginRight: '8px'}}>
+              {`点赞数：${postDetail.like_count}`}
+            </span>
+            {
+              postDetail.is_like === '1' ? (
+                <div onClick={() => this.like()}>
+                  <Icon type="heart" />
+                </div>
+              ) : (
+                <div onClick={() => this.like()}>
+                  <Icon type="heart" theme="twoTone" twoToneColor="#eb2f96" />
+                </div>
+              )
+            }
           </div>
-          
+
+          <span>{`发布于  ${moment(postDetail && postDetail.post_pub_date || moment()).format('YYYY-MM-DD HH:mm:ss')}`}</span>
         </div>
-        <span>{`发布于  ${moment(postDetail && postDetail.post_pub_date || moment()).format('YYYY-MM-DD HH:mm:ss')}`}</span>
 
         {this.renderTips()}
       </div>
@@ -314,10 +411,10 @@ class Post extends React.Component<PostProps, PostState> {
   }
 
   private renderTips = () => {
-    const { } = this.props;
+    const { postDetail } = this.props;
     const TipCls = 'centerm-tips';
 
-    const comments = [1, 2, 3, 4];
+    const {comments} = postDetail;
     return (
       <div className={pstyles[`${TipCls}`]}>
         <h3 className={pstyles[`${TipCls}-title`]}>
@@ -325,15 +422,39 @@ class Post extends React.Component<PostProps, PostState> {
           <span>笔记评论</span>
         </h3>
 
-        <div className={pstyles[`${TipCls}-content`]}>
-          {
-            comments.map((comment, index: number) => {
-              return (<Comment key={index} comment={comment} />);
-            })
-          }
-        </div>
+        {
+          comments && comments.length > 0 ? (
+            <div>
+              <div className={pstyles[`${TipCls}-content`]}>
+                {
+                  comments.map((comment: any, index: number) => {
+                    return (<Comment key={index} comment={comment} />);
+                  })
+                }
+              </div>
 
-        <div onClick={() => this.showMoreComment()} className={pstyles[`${TipCls}-more`]}>查看更多评论</div>
+              <div onClick={() => this.showMoreComment()} className={pstyles[`${TipCls}-more`]}>查看更多评论</div>
+            </div>
+          ) : (
+            <div className={pstyles[`${TipCls}-more`]}>暂无评论</div>
+          )
+        }
+        <AntdComment
+          avatar={(
+            <Avatar
+              src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+              alt="Han Solo"
+            />
+          )}
+          content={(
+            <Editor
+              onChange={this.changeComment}
+              onSubmit={this.handleSubmit}
+              // submitting={submitting}
+              value={this.state.comment}
+            />
+          )}
+        />
       </div>
     );
   }
@@ -344,6 +465,7 @@ const mapStateToProps = (state: Stores, ownProps: PostProps) => {
   return {
     postDetail,
     recommendPosts: getRecommendPosts(state),
+    userinfo: getUserinfo(state),
   };
 };
 

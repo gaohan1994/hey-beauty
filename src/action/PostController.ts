@@ -5,6 +5,28 @@ import { RECEIVE_POST_LIST, RECEIVE_POST_DETAIL, RECEIVE_RECOMMEND_POST } from '
 import { store } from '../index';
 class PostController {
 
+  public addCommentInf = async (params: any) => {
+    const { param } = params;
+    const { code, data, msg } = await PostService.addCommentInf(param);
+
+    if (code === '10000') {
+      return { success: true, result: data };
+    } else {
+      return { success: false, result: msg };
+    }
+  }
+
+  public addLikeInf = async (params: any) => {
+    const { param } = params;
+    const { code, data, msg } = await PostService.addLikeInf(param);
+
+    if (code === '10000') {
+      return { success: true, result: data };
+    } else {
+      return { success: false, result: msg };
+    }
+  }
+
   public postList = async (params: DispatchAbstract<any>): Promise<any> => {
     const { param, dispatch } = params;
     const result = await PostService.postList(param);

@@ -3,6 +3,18 @@ import config from '../common/config';
 
 class PostService {
 
+  public addCommentInf = (params: any) => {
+    return request(
+      `${config.FETCH_ENTRY}/app/addCommentInf`,
+      'post',
+      {
+        biz_content: {
+          ...params
+        }
+      }
+    );
+  }
+
   public addLikeInf = (params: any) => {
     return request(
       `${config.FETCH_ENTRY}/app/addLikeInf`,
