@@ -12,6 +12,7 @@ import {
   RECEIVE_ORDER_LIST,
   RECEIVE_ORDER_DETAIL,
   RECEIVE_COLLECTION_LIST,
+  RECEIVE_SEARCH_PRODUCTS,
 } from '../constants';
 import { Dispatch } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -30,7 +31,8 @@ export interface AbstractInterface {
     RECEIVE_RECOMMEND_POST |
     RECEIVE_ORDER_LIST |
     RECEIVE_ORDER_DETAIL |
-    RECEIVE_COLLECTION_LIST;
+    RECEIVE_COLLECTION_LIST |
+    RECEIVE_SEARCH_PRODUCTS;
 
   payload: any;
 }

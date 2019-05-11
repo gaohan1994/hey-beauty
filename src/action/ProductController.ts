@@ -6,8 +6,32 @@ import {
   RECEIVE_PRODUCT_INFOS,
   RECEIVE_CURRENT_PRODUCT,
 } from '../constants';
+import { store } from '.././index';
+import { RECEIVE_SEARCH_PRODUCTS } from '../constants';
 
 class ProductController {
+
+  public searchProducts = async (params: any) => {
+
+    let payload = {
+      ...params,
+      page_index: 1,
+      page_size: 200
+    };
+    const { code, biz_content } = await ProductService.getProductsInfos(payload);
+
+    if (code === '10000') {
+      store.dispatch({
+        type: RECEIVE_SEARCH_PRODUCTS,
+        payload: {
+          searchProducts: biz_content.product_list
+        }
+      });
+      return { success: true };
+    } else {
+      return { success: false };
+    }
+  }
   
   public getProductsTypeInfos = async (params: DispatchAbstract<any>): Promise<any> => {
     const { dispatch, param } = params;

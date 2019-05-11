@@ -2,6 +2,7 @@ import request from '../common/request';
 import config from '../common/config';
 
 class ProductService {
+
   public getProductsTypeInfos = (params: any) => {
     return request(
       `${config.FETCH_ENTRY}/app/getProductsTypeInfos`,

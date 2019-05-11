@@ -2,6 +2,7 @@ import {
   RECEIVE_PRODUCT_LIST,
   RECEIVE_PRODUCT_INFOS,
   RECEIVE_CURRENT_PRODUCT,
+  RECEIVE_SEARCH_PRODUCTS,
 } from '../constants';
 import { Stores } from './index';
 import Actions from '../action';
@@ -11,12 +12,14 @@ export type Product = {
   productTypeList: any[];
   productInfos: any[];
   currentProduct: any;
+  searchProducts: any[];
 };
 
 export const initState = {
   productTypeList: [],
   productInfos: [],
   currentProduct: {},
+  searchProducts: [],
 };
 
 /**
@@ -29,6 +32,13 @@ export const initState = {
  */
 export default function product (state: Product = initState,  action: Actions): Product {
   switch (action.type) {
+
+    case RECEIVE_SEARCH_PRODUCTS:
+      const { payload: { searchProducts } } = action;
+      return {
+        ...state,
+        searchProducts
+      };
 
     case RECEIVE_CURRENT_PRODUCT:
       const { payload: { currentProduct } } = action;
@@ -76,3 +86,5 @@ export const getCurrentProduct = (state: Stores) => state.product.currentProduct
 export const getProductTypeList = (state: Stores) => state.product.productTypeList;
 
 export const getProductInfos = (state: Stores) => state.product.productInfos;
+
+export const getSearchProducts = (state: Stores) => state.product.searchProducts;
