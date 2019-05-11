@@ -481,7 +481,7 @@ class Post extends React.Component<PostProps, PostState> {
 
       const { post_content } = post;
 
-      const contentArray: string[] = post_content.split(' ');
+      const contentArray: string[] = post_content.split('\n');
       return (
         <div className={pstyles['centerm-content']}>
           {
