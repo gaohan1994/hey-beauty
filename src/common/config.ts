@@ -56,12 +56,12 @@ const defaultCommonConfig: DefaultCommonConfig = {
 const devConfig: InterfaceConfig = {
   ...defaultCommonConfig,
   // FETCH_ENTRY: 'http://zhouminghui.natapp1.cc',
-  FETCH_ENTRY: 'http://172.30.200.152:8080',
+  FETCH_ENTRY: 'http://zhouminghui.natapp1.cc',
 };
 
 const proConfig: InterfaceConfig = {
   ...defaultCommonConfig,
-  FETCH_ENTRY: 'http://172.30.200.152:8080',
+  FETCH_ENTRY: 'http://zhouminghui.natapp1.cc',
 };
 
 interface ProcessChoiceFilterFunc<T> {

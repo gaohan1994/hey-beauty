@@ -1,9 +1,55 @@
 import PostService from '../service/PostService';
 import { DispatchAbstract, AbstractParams } from './index';
 import { Unpack, UnpackPromise } from '../common/request';
-import { RECEIVE_POST_LIST, RECEIVE_POST_DETAIL, RECEIVE_RECOMMEND_POST } from '../constants';
+import { RECEIVE_POST_LIST, RECEIVE_POST_DETAIL, RECEIVE_RECOMMEND_POST, RECEIVE_COLLECTION_LIST } from '../constants';
 import { store } from '../index';
 class PostController {
+
+  public addPostInf = async (params: any) => {
+    const { code, biz_content } = await PostService.addPostInf(params);
+    if (code === '10000') {
+      return { success: true, result: biz_content };
+    } else {
+      return { success: false };
+    }
+  }
+
+  public addCollectionInf = async (params: any) => {
+    const { code } = await PostService.addCollectionInf(params);
+    console.log('addCollectionInf code: ', code);
+
+    if (code === '10000') {
+      return { success: true };
+    } else {
+      return { success: false };
+    }
+  }
+  public cancelCollectionInf = async (params: any) => {
+    const { code } = await PostService.cancelCollectionInf(params);
+    console.log('cancelCollectionInf code: ', code);
+    if (code === '10000') {
+      return { success: true };
+    } else {
+      return { success: false };
+    }
+
+  }
+  public collectionList = async (params: any) => {
+    const { code, biz_content } = await PostService.collectionList(params);
+    
+    if (code === '10000') {
+      console.log('collectionList code: ', code);
+      store.dispatch({
+        type: RECEIVE_COLLECTION_LIST,
+        payload: {
+          collectionList: biz_content.collection_list
+        }
+      });
+      return { success: true };
+    } else {
+      return { success: false };
+    }
+  }
 
   public addCommentInf = async (params: any) => {
     const { param } = params;

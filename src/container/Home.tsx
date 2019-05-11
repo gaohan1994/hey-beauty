@@ -121,8 +121,8 @@ class Home extends Component<HomeProps, HomeState> {
                 key={item.product_id}
                 hoverable={true}
                 className={classnames(styles['centerm-card'])}
-                // cover={<img alt="card cover" src={item.product_logo_address} />}
-                cover={<img src="http://ci.xiaohongshu.com/e1ac4cb4-c422-5872-b295-87cef35ec781?imageView2/2/w/1080/format/jpg"/>}
+                cover={<img style={{width: '250px', height: '250px'}} alt="card cover" src={item.product_logo_address} />}
+                // cover={<img src="http://ci.xiaohongshu.com/e1ac4cb4-c422-5872-b295-87cef35ec781?imageView2/2/w/1080/format/jpg"/>}
               >
                 <Skeleton loading={!(item && item.product_id)} >
                   <div className={styles['centerm-card-meta']}>

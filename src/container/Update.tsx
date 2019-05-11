@@ -12,9 +12,8 @@ type Props = {};
 class Update extends Component<Props, any> {
   render() {
     return (
-      <div>
+      <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: '12px'}}>
         <Uploader />
-        update;
       </div>
     );
   }

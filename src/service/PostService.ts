@@ -3,6 +3,54 @@ import config from '../common/config';
 
 class PostService {
 
+  public addPostInf = (params: any) => {
+    return request(
+      `${config.FETCH_ENTRY}/app/addPostInf`,
+      'post',
+      {
+        biz_content: {
+          ...params
+        }
+      }
+    );
+  }
+
+  public addCollectionInf = (params: any) => {
+    return request(
+      `${config.FETCH_ENTRY}/app/addCollectionInf`,
+      'post',
+      {
+        biz_content: {
+          ...params
+        }
+      }
+    );
+  }
+
+  public cancelCollectionInf = (params: any) => {
+    return request(
+      `${config.FETCH_ENTRY}/app/cancelCollectionInf`,
+      'post',
+      {
+        biz_content: {
+          ...params
+        }
+      }
+    );
+  }
+
+  public collectionList = (params: any) => {
+    return request(
+      `${config.FETCH_ENTRY}/app/collectionList`,
+      'post',
+      {
+        biz_content: {
+          ...params
+        }
+      }
+    );
+  }
+
   public addCommentInf = (params: any) => {
     return request(
       `${config.FETCH_ENTRY}/app/addCommentInf`,

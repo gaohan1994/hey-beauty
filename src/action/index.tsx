@@ -8,7 +8,10 @@ import {
   RECEIVE_POST_LIST,
   RECEIVE_USERINFO,
   RECEIVE_POST_DETAIL,
-  RECEIVE_RECOMMEND_POST
+  RECEIVE_RECOMMEND_POST,
+  RECEIVE_ORDER_LIST,
+  RECEIVE_ORDER_DETAIL,
+  RECEIVE_COLLECTION_LIST,
 } from '../constants';
 import { Dispatch } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -24,7 +27,10 @@ export interface AbstractInterface {
     RECEIVE_POST_LIST |
     RECEIVE_USERINFO |
     RECEIVE_POST_DETAIL |
-    RECEIVE_RECOMMEND_POST;
+    RECEIVE_RECOMMEND_POST |
+    RECEIVE_ORDER_LIST |
+    RECEIVE_ORDER_DETAIL |
+    RECEIVE_COLLECTION_LIST;
 
   payload: any;
 }

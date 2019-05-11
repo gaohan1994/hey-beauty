@@ -8,6 +8,7 @@ import { getCurrentRoute } from '../store/status';
 import Actions from '../action/index';
 import StatusController, { ChangeRouteI } from 'src/action/StatusController';
 import { DispatchAbstract } from '../action/index';
+import { getUserinfo } from '../store/user';
 
 const { Header, Content } = Layout;
 
@@ -16,6 +17,7 @@ const { Item } = Menu;
 interface BasicLayoutProps {
   currentRoute: string;
   dispatch: Dispatch<Actions>;
+  userinfo: any;
 }
 
 interface BasicLayoutState {
@@ -47,7 +49,7 @@ class BasicLayout extends Component<BasicLayoutProps, BasicLayoutState> {
 
   private renderMenu = () => {
 
-    const { currentRoute } = this.props;
+    const { currentRoute, userinfo } = this.props;
 
     const menus: any[] = [
       {
@@ -67,14 +69,19 @@ class BasicLayout extends Component<BasicLayoutProps, BasicLayoutState> {
         title: '我的订单',
       },
       {
-        key: 'join',
-        title: '加入我们',
+        key: 'collects',
+        title: '我的收藏',
       },
-      {
-        key: 'account',
-        title: '品牌账号',
-      }
     ];
+
+    {
+      if (userinfo.user_id) {
+        menus.push({
+          key: 'update',
+          title: '上传帖子'
+        });
+      }
+    }
 
     return (
       <Menu
@@ -101,6 +108,7 @@ class BasicLayout extends Component<BasicLayoutProps, BasicLayoutState> {
 
 const mapStateToProps = (state: Stores) => ({
   currentRoute: getCurrentRoute(state),
+  userinfo: getUserinfo(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({

@@ -48,8 +48,8 @@ class Product extends React.Component<ProductProps, ProductState> {
         <Card
           style={{width: 500, marginTop: 20}}
           hoverable={true}
-          // cover={<img alt="product card cover" src={currentProduct.product_logo_address} />}
-          cover={<img alt="product card cover" src={'http://ci.xiaohongshu.com/e1ac4cb4-c422-5872-b295-87cef35ec781?imageView2/2/w/1080/format/jpg'} />}
+          cover={<img alt="product card cover" src={currentProduct.product_logo_address} />}
+          // cover={<img alt="product card cover" src={'http://ci.xiaohongshu.com/e1ac4cb4-c422-5872-b295-87cef35ec781?imageView2/2/w/1080/format/jpg'} />}
         >
           <Meta
             title={currentProduct.product_name} 
@@ -60,7 +60,7 @@ class Product extends React.Component<ProductProps, ProductState> {
                     backgroundColor: '#ffbf00', 
                     verticalAlign: 'middle'
                 }} 
-                src="http://ci.xiaohongshu.com/e1ac4cb4-c422-5872-b295-87cef35ec781?imageView2/2/w/1080/format/jpg"
+                src={currentProduct.product_logo_address} 
               />
             }
             description="description"

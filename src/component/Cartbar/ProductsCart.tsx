@@ -12,9 +12,26 @@ import numeral from 'numeral';
 import OrderController from '../../action/OrderController';
 import Dialog from '../Dialog';
 import { DispatchAbstract } from '../../action/index';
+import SignController from '../../action/SignController';
+import history from '../../history';
 
 const { Item } = List;
 const { Meta } = Item;
+
+export const GetStandCartToOrderList = (list: any[]): any[] => {
+  
+  const standList = list.map((item: any) => {
+    return {
+      product_id: item.product_id,
+      product_num: item.number,
+      single_price: item.product_price,
+      product_remark: '',
+      product_name: item.product_name,
+    };
+  });
+
+  return standList;
+};
 
 interface ProductsCartProps extends CartbarPropsPartialProps {
   list: any[];
@@ -71,21 +88,31 @@ class ProductsCart extends Component<PartialProductsCartProps, State> {
   }
 
   public sendOrder = async () => {
-    const { dispatch } = this.props;
+    const { dispatch, list } = this.props;
 
-    if (dispatch) {
-      const payload: DispatchAbstract<any> = {
-        dispatch,
-        param: {}
-      };
-      const { success } = await OrderController.sendOrder(payload);
-  
-      if (success === true) {
-        Dialog.showToast('下单成功');
-        
-        this.successOrderCallback();
+    SignController.loginAuth().then(async ({login, userinfo}) => {
+
+      if (login === true) {
+        if (dispatch && list) {
+          const payload: DispatchAbstract<any> = {
+            dispatch,
+            param: {
+              order_detail: GetStandCartToOrderList(list),
+              user_id: userinfo.user_id,
+              address_id: '1'
+            }
+          };
+          const { success } = await OrderController.sendOrder(payload);
+      
+          if (success === true) {
+            Dialog.showToast('下单成功');
+            this.successOrderCallback();
+          }
+        }
+      } else {
+        history.push('/sign');
       }
-    }
+    });
   }
 
   public successOrderCallback = () => {
@@ -94,7 +121,6 @@ class ProductsCart extends Component<PartialProductsCartProps, State> {
      * @param `2.跳转到order`
      */
     this.hideConfirm();
-    
   }
 
   render() {

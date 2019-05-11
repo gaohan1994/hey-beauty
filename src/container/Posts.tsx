@@ -13,6 +13,40 @@ import classnames from 'classnames';
 import history from '../history';
 // import SignController from 'src/action/SignController';
 
+export const onCardClickHandle = (post: any) => {
+  history.push(`/post/${post.post_id}`);
+};
+
+export const PostCard = ({post}: any) => {
+  return (
+    <Card
+      onClick={() => onCardClickHandle(post)}
+      hoverable={true}
+      className={classnames(styles['centerm-card'])}
+      cover={
+        // <img alt="" src={post.post_cover_img_address} />
+        // <img className={styles['centerm-card-image']} src={'//ci.xiaohongshu.com/d147b97d-2be9-5f9d-b18f-30049001725b?imageView2/2/w/1080/format/jpg'} />} 
+        <img className={styles['centerm-card-image']} src={post.post_cover_img_address} />} 
+    >
+      <Skeleton loading={!(post && post.post_id)} >
+        <div className={styles['centerm-card-meta']}>
+          <h3 className={styles['centerm-card-meta-title']}>{post.post_name}</h3>
+
+          <div className={styles['centerm-card-meta-info']}>
+            <div className={styles['centerm-card-meta-item']}>
+              <Avatar src={post.images} />
+              <span className={styles['centerm-card-meta-name']}>{post.post_pub_user_name}</span>
+            </div>
+            <div className={styles['centerm-card-meta-item']}>
+              <Icon type="heart" />
+              <span className={styles['centerm-card-meta-name']}>{post.like_count}</span>
+            </div>
+          </div>
+        </div>
+      </Skeleton>
+    </Card>
+  );
+};
 interface PostsProps {
   postList: any[];
   dispatch: Dispatch<any>;
@@ -42,40 +76,6 @@ class Posts extends Component<Props, State> {
 
   render() {
     const { postList } = this.props;
-
-    const onCardClickHandle = (post: any) => {
-      history.push(`/post/${post.post_id}`);
-    };
-
-    const PostCard = ({post}: any) => {
-      return (
-        <Card
-          onClick={() => onCardClickHandle(post)}
-          hoverable={true}
-          className={classnames(styles['centerm-card'])}
-          cover={
-            // <img alt="" src={post.post_cover_img_address} />
-            <img className={styles['centerm-card-image']} src={'//ci.xiaohongshu.com/d147b97d-2be9-5f9d-b18f-30049001725b?imageView2/2/w/1080/format/jpg'} />} 
-        >
-          <Skeleton loading={!(post && post.post_id)} >
-            <div className={styles['centerm-card-meta']}>
-              <h3 className={styles['centerm-card-meta-title']}>{post.post_name}</h3>
-
-              <div className={styles['centerm-card-meta-info']}>
-                <div className={styles['centerm-card-meta-item']}>
-                  <Avatar src={post.images} />
-                  <span className={styles['centerm-card-meta-name']}>{post.post_pub_user_name}</span>
-                </div>
-                <div className={styles['centerm-card-meta-item']}>
-                  <Icon type="heart" />
-                  <span className={styles['centerm-card-meta-name']}>{post.like_count}</span>
-                </div>
-              </div>
-            </div>
-          </Skeleton>
-        </Card>
-      );
-    };
     
     return (
       <div className={styles['centerm-posts']}>

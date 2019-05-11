@@ -6,17 +6,20 @@ import {
 import { Stores } from './index';
 
 import Actions from '../action';
+import { RECEIVE_COLLECTION_LIST } from '../constants';
 
 export type Post = {
   postList: any[];
   postDetail: any;
-  recommendPosts: any[]
+  recommendPosts: any[];
+  collectionList: any[];
 };
 
 export const initState = {
   postList: [],
   postDetail: {},
   recommendPosts: [],
+  collectionList: [],
 };
 
 /**
@@ -29,6 +32,13 @@ export const initState = {
  */
 export default function post (state: Post = initState,  action: Actions): Post {
   switch (action.type) {
+
+    case RECEIVE_COLLECTION_LIST:
+      const { payload: { collectionList } } = action;
+      return {
+        ...state,
+        collectionList,
+      };
     
     case RECEIVE_RECOMMEND_POST:
       const { payload: { recommendPosts } } = action;
@@ -73,3 +83,5 @@ export const getPostList = (state: Stores) => state.post.postList;
 export const getPostDetail = (state: Stores, id: string) => state.post.postDetail[id] || {};
 
 export const getRecommendPosts = (state: Stores) => state.post.recommendPosts;
+
+export const getCollectionList = (state: Stores) => state.post.collectionList;

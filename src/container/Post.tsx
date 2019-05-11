@@ -18,8 +18,27 @@ import ReactPlayer from 'react-player';
 import { getRecommendPosts } from '../store/post';
 import { getUserinfo } from '../store/user';
 import invariant from 'invariant';
+import Swiper from 'react-swipeable-views';
 
 const { TextArea } = Input;
+
+export function checkVideo (video: string): boolean {
+  
+  if (
+    video.indexOf('.mp4') !== -1 ||
+    video.indexOf('rm' ) !== -1 ||
+    video.indexOf('mov' ) !== -1 ||
+    video.indexOf('wmv' ) !== -1 ||
+    video.indexOf('flv' ) !== -1 ||
+    video.indexOf('.rmvb') !== -1 ||
+    video.indexOf('.avi') !== -1 ||
+    video.indexOf('.ts') !== -1 
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 const Editor = ({
   onChange, onSubmit, value,
@@ -131,8 +150,12 @@ export const Postrow = ({post}: any) => {
     margin: '0',
   };
 
+  const postClick = (post: any) => {
+    history.push(`/post/${post.postId}`);
+  };
+
   return (
-    <div style={RowStyle}>
+    <div style={RowStyle} onClick={() => postClick(post)}>
       <div style={ImgStyle}>
         <span 
           style={{
@@ -160,15 +183,119 @@ interface PostProps extends RouteComponentProps<any> {
 
 interface PostState {
   comment: string;
+  index: number;
 }
 
 class Post extends React.Component<PostProps, PostState> {
 
   state = {
-    comment: ''
+    comment: '',
+    index: 0,
   };
 
   componentDidMount = () => {
+    this.init();
+  }
+
+  public changeIndex = (index: number) => {
+    console.log('changeIndex: ', index);
+    this.setState({ index }, () => {
+      console.log('this.state: ', this.state);
+    });
+  }
+
+  public RenderCover = (props: any) => {
+    const { postDetail } = props;
+
+    const swiperContainer = {height: '500px'};
+
+    const buttonStyle: any = {
+      width: '40px',
+      height: '40px',
+      background: '#f2f2f2',
+      color: '#000000',
+      borderRadius: '20px',
+      lineHeight: '40px',
+      textAlign: 'center',
+      position: 'absolute',
+      top: '220px',
+      zIndex: '9999',
+      fontSize: '14px',
+    };
+    return (
+      <div style={{position: 'relative'}}>
+        {
+          postDetail.video_address && postDetail.video_address.length > 0 ? (
+            <div onClick={() => this.onNext()} style={{...buttonStyle, right: '20px' }} >
+              {`>`}
+            </div>
+          ) : null
+        }
+
+        { 
+          postDetail.video_address && postDetail.video_address.length > 0 ? (
+            <div onClick={() => this.onLast()} style={{...buttonStyle, left: '20px' }} >
+              {`<`}
+            </div>
+          ) : null
+        }
+        <Swiper 
+          autoPlay={true}
+          index={this.state.index}
+          onChangeIndex={this.changeIndex}
+          style={swiperContainer}
+        >
+          {
+            postDetail.video_address && postDetail.video_address.length > 0
+              ? postDetail.video_address && postDetail.video_address.map((item: any, index: number) => {
+
+                if (checkVideo(item) === false) {
+                  return (
+                    <div style={swiperContainer} key={index}>
+                      <img src={item} />
+                      {/* <img src="//ci.xiaohongshu.com/d147b97d-2be9-5f9d-b18f-30049001725b?imageView2/2/w/1080/format/jpg" /> */}
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div style={swiperContainer} key={index}>
+                      <ReactPlayer 
+                        style={{backgroundColor: '#000000'}}
+                        width={500} 
+                        height={500} 
+                        url={item}
+                        controls={true}
+                      />
+                    </div>
+                  );
+                }
+              })
+              : <div style={swiperContainer}>加载中</div>
+          }
+        </Swiper>
+      </div>
+    );
+  }
+
+  public onNext = () => {
+
+    if (this.props.postDetail && this.props.postDetail.video_address && this.props.postDetail.video_address.length > 0) {
+      console.log('this.props.postDetail.video_address.length: ', this.props.postDetail.video_address.length);
+      console.log('this.state.index + 1: ', this.state.index + 1);
+      if (this.state.index < this.props.postDetail.video_address.length - 1) {
+        console.log('true');
+        this.changeIndex(this.state.index + 1);
+      }
+    }
+  }
+  public onLast = () => {
+    console.log('this.state.index: ', this.state.index);
+    if (this.state.index > 0) {
+      this.changeIndex(this.state.index - 1);
+    }
+  }
+
+  public init = () => {
     const { match: { params: { id } } } = this.props;
 
     SignController.loginAuth().then(({login}) => {
@@ -203,7 +330,6 @@ class Post extends React.Component<PostProps, PostState> {
   }
 
   public changeComment = ({target: { value }}: any) => {
-    console.log('value: ', value);
     this.setState({comment: value});
   }
 
@@ -221,13 +347,17 @@ class Post extends React.Component<PostProps, PostState> {
   
       const { success, result } = await PostController.addCommentInf(params); 
   
+      this.changeComment({target: {value: ''}});
       invariant(
         success,
         result || ' '
       );
       
       notification.success({message: '评论成功！'});
-      window.location.reload();
+      
+      setTimeout(() => {
+        this.init();
+      }, 1000);
     } catch (error) {
       notification.warn({message: error.message});
     }
@@ -250,13 +380,65 @@ class Post extends React.Component<PostProps, PostState> {
         result || ' '
       );
 
-      notification.success({message: '点赞成功！'});
+      {
+        postDetail.is_like === '1' 
+          ? notification.info({message: '取消点赞'})
+          : notification.success({message: '点赞成功！'});
+      }
+
+      setTimeout(() => {
+        this.init();
+      }, 1000);
     } catch (error) {
       notification.warn({message: error.message});
     }
   }
-  public unLike = () => {
-    console.log('unlike');
+
+  public doCollect = async () => {
+    const { postDetail, userinfo } = this.props;
+    try {
+      
+      const payload = {
+        post_id: `${postDetail.post_id}`,
+        user_id: userinfo.user_id
+      };
+
+      console.log('payload: ', payload);
+      const { success } = await PostController.addCollectionInf(payload);
+      invariant(
+        success,
+        '收藏失败'
+      );
+      notification.success({message: '收藏成功！'});
+      setTimeout(() => {
+        this.init();
+      }, 1000);
+    } catch (error) {
+      notification.warn({message: error.message});
+    }
+  }
+
+  public cancelCollect = async () => {
+    const { postDetail, userinfo } = this.props;
+    try {
+      
+      const payload = {
+        post_id: `${postDetail.post_id}`,
+        user_id: userinfo.user_id
+      };
+
+      const { success } = await PostController.cancelCollectionInf(payload);
+      invariant(
+        success,
+        '取消收藏失败'
+      );
+      notification.info({message: '取消收藏'});
+      setTimeout(() => {
+        this.init();
+      }, 1000);
+    } catch (error) {
+      notification.warn({message: error.message});
+    }
   }
 
   public render() {
@@ -295,38 +477,22 @@ class Post extends React.Component<PostProps, PostState> {
   private renderLeft = (): JSX.Element => {
     const { postDetail } = this.props;
 
-    const RenderCover = (props: any) => {
-      const { postDetail } = props;
+    const RenderPContent = ({post}: any) => {
 
-      if (postDetail.video_address && postDetail.video_address[0]) {
+      const { post_content } = post;
 
-        return (
-          <div>
-            <ReactPlayer 
-              style={{backgroundColor: '#000000'}}
-              width={500} 
-              height={500} 
-              url={'http://v.xiaohongshu.com/90eead44c52983b60d542a95263d659da90068e8?sign=f05fbcc94c7c64eeead6a879ea03087f&t=5cc71f80'} 
-              playing={true}
-              controls={true}
-            />
-          </div>
-        );
-      } else {
-        return (
-          <img src="//ci.xiaohongshu.com/d147b97d-2be9-5f9d-b18f-30049001725b?imageView2/2/w/1080/format/jpg" />
-        );
-      }
-    };
-
-    return (
-      <div className={styles.pLeft} >
-        <RenderCover postDetail={postDetail} />
-        {/* renderdetail */}
-
+      const contentArray: string[] = post_content.split(' ');
+      return (
         <div className={pstyles['centerm-content']}>
-          <p className={pstyles['centerm-text-p']} >夏天到啦，一份奶黄奶黄～你要嘛～</p>
-          <p className={pstyles['centerm-text-p']} >推荐色：液态硅胶壳-奶黄色💛</p>
+          {
+            contentArray.map((c: any, index: number) => {
+              return (
+                <p key={index} className={pstyles['centerm-text-p']} >{c}</p>
+              );
+            })
+          }
+         
+          {/* <p className={pstyles['centerm-text-p']} >推荐色：液态硅胶壳-奶黄色💛</p>
           <p className={pstyles['centerm-text-p']} >这个色一点也不荧光，不会看起来土土的hhh！</p>
           <p className={pstyles['centerm-text-p']} >手机拍摄的🎬，亮灯光下～</p>
           <p className={pstyles['centerm-text-p']} >这个壳子是好多明星同款噢，疯狂种草！</p>
@@ -334,8 +500,22 @@ class Post extends React.Component<PostProps, PostState> {
           <p className={pstyles['centerm-text-p']} >里面有绒面是可以散热的，很舒服！</p>
           <p className={pstyles['centerm-text-p']} >快给你的壳子穿衣服😊</p>
           <p className={pstyles['centerm-text-p']} >我是RMB💰23购入的，价格便宜，质量也算不错的咯…</p>
-          <p className={pstyles['centerm-text-p']} >购入某🍑，看图～</p>
+          <p className={pstyles['centerm-text-p']} >购入某🍑，看图～</p> */}
         </div>
+      );
+    };
+
+    return (
+      <div className={styles.pLeft} >
+        {this.RenderCover(this.props)}
+        {/* <RenderCover postDetail={postDetail} /> */}
+        {/* renderdetail */}
+
+        {
+          postDetail.post_content ? (
+            <RenderPContent post={postDetail} />
+          ) : null
+        }
 
         <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
           <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
@@ -351,6 +531,14 @@ class Post extends React.Component<PostProps, PostState> {
                 <div onClick={() => this.like()}>
                   <Icon type="heart" theme="twoTone" twoToneColor="#eb2f96" />
                 </div>
+              )
+            }
+
+            {
+              postDetail.is_collection === '1' ? (
+                <span style={{marginLeft: '6px'}} onClick={() => this.cancelCollect()}>取消收藏</span>
+              ) : (
+                <span style={{marginLeft: '6px'}} onClick={() => this.doCollect()}>收藏</span>
               )
             }
           </div>

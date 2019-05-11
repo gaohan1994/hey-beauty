@@ -14,6 +14,7 @@ import product, { Product, initState as ProductState } from './product';
 import post, { Post, initState as PostState } from './post';
 import cart, { Cart, initState as CartState } from './cart';
 import user, { User, initState as UserState } from './user';
+import order, { Order, initState as OrderSatate } from './order';
 
 export interface Stores {
   status: Status;
@@ -21,6 +22,7 @@ export interface Stores {
   post: Post;
   cart: Cart;
   user: User;
+  order: Order;
 }
 
 export const StoreState = {
@@ -29,6 +31,7 @@ export const StoreState = {
   post: PostState,
   cart: CartState,
   user: UserState,
+  order: OrderSatate,
 };
 
 export default combineReducers({
@@ -37,6 +40,7 @@ export default combineReducers({
   post,
   cart,
   user,
+  order,
 });
 
 const configureStore = () => {

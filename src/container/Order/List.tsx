@@ -3,11 +3,22 @@ import OrderController from '../../action/OrderController';
 import SignController from '../../action/SignController';
 import invariant from 'invariant';
 import history from '../../history';
-import { message } from 'antd';
+import { message, List as AntdList } from 'antd';
+import { connect, Dispatch } from 'react-redux';
+import { Stores } from '../../store/index';
+import { getOrderList } from '../../store/order';
 
-type Props = {
-
+export const renderStatus = (status: number) => {
+  switch (status) {
+    case 0:
+      return '未发货';
+    default:
+      return '未知状态';
+  }
 };
+
+type Props = any;
+
 type State = {
 
 };
@@ -24,6 +35,10 @@ class List extends Component<Props, State> {
   componentDidMount() {
 
     this.init();
+  }
+
+  public navToOrder = (order: any) => {
+    history.push(`/order/${order.order_id}`);
   }
 
   public init = async () => {
@@ -52,12 +67,52 @@ class List extends Component<Props, State> {
   }
 
   render() {
+
+    const { list } = this.props;
+
     return (
-      <div>
-        List
+      <div style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+        <div style={{maxWidth: '800px'}}>
+          <AntdList
+            itemLayout="vertical"
+            size="large"
+            dataSource={list || []}
+            renderItem={(item: any) => (
+              <AntdList.Item
+                onClick={() => this.navToOrder(item)}
+                key={item.title}
+                extra={<img width={200} alt="logo" src={`${item.order_detail && item.order_detail[0] && item.order_detail[0].product_logo_address}`} />}
+              >
+                <AntdList.Item.Meta
+                  // avatar={<Avatar src={item.avatar} />}
+                  title={<a href={item.href}>{`订单号： ${item.order_id}`}</a>}
+                  description={`订单状态：${renderStatus(Number(item.status))}`}
+                />
+
+                {
+                  item.order_detail && item.order_detail.map((item: any) => {
+                    return (
+                      <div key={item.product_id}>
+                        {`${item.product_name} x ${item.product_num}`}
+                      </div>
+                    );
+                  })
+                }
+              </AntdList.Item>
+            )}
+          />
+        </div>
       </div>
     );
   }
 }
 
-export default List;
+const mapState = (state: Stores) => ({
+  list: getOrderList(state),
+});
+
+const mapDispatch = (dispatch: Dispatch<any>) => ({
+  dispatch
+});
+
+export default connect(mapState, mapDispatch)(List);

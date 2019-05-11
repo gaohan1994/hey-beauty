@@ -33,6 +33,9 @@ import Register from './container/Register';
 // import { ProductsCart } from './component/Cartbar';
 import Update from './container/Update';
 import List from './container/Order/List';
+import Order from './container/Order/Order';
+import Collects from './container/Collects';
+import Collection from './container/Collection';
 
 /**
  * @param title -- 网页 title
@@ -101,12 +104,16 @@ const RouterConfig = ({ }: DocumentTitleProps) => {
           <Route path="/" exact={true} render={() => renderRouteLayout(App, '/')} />
           <Route path="/home" render={() => renderRouteLayout(Home, '/home')} /> 
           <Route path="/about" render={() => renderRouteLayout(About, '/about')} />
+          <Route path="/collects" render={() => renderRouteLayout(Collects, '/collects')} />
           <Route path="/product/:id" render={(props: RouteComponentProps<any>) => renderRouteLayout(Product, '/product/:id', props)} />
           <Route path="/user/:id" render={(props: RouteComponentProps<any>) => renderRouteLayout(User, '/user/:id', props)} />
           <Route path="/posts" render={(props: RouteComponentProps<any>) => renderRouteLayout(Posts, '/posts', props)} />
           <Route path="/post/:id" render={(props: RouteComponentProps<any>) => renderRouteLayout(Post, '/post/:id', props)} />
           <Route path="/update" render={(props: RouteComponentProps<any>) => renderRouteLayout(Update, '/update', props)} />
           <Route path="/list" render={(props: RouteComponentProps<any>) => renderRouteLayout(List, '/list', props)} />
+          <Route path="/order/:id" render={(props: RouteComponentProps<any>) => renderRouteLayout(Order, '/order/:id', props)} />
+          <Route path="/collection/:id" render={(props: RouteComponentProps<any>) => renderRouteLayout(Collection, '/collection/:id', props)}/>
+          
           <Route path="/sign" component={Sign} />
           <Route path="/register" component={Register} />
           <Route component={NotFound}/>
