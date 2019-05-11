@@ -194,7 +194,7 @@ class Uploader extends Component<UploaderProps, UploaderState> {
         </div>
         
         <div style={{marginTop: '12px'}}>
-          <span>帖子标题</span>
+          <span>帖子内容</span>
           <TextArea value={this.state.content} onChange={this.onChangeContent} rows={4} placeholder="请输入内容" />
         </div>
 
