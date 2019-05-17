@@ -37,12 +37,15 @@ class ProductController {
     const { dispatch, param } = params;
     const result: any = await ProductService.getProductsTypeInfos(param);
     
-    Unpack(result, async () => {
+    if (result.code === '10000') {
       dispatch({
         type: RECEIVE_PRODUCT_LIST,
         payload: { productTypeList: result.biz_content.product_type_list }
       });
-    });
+      return { success: true, result: result.biz_content.product_type_list };
+    } else {
+      return { success: false };
+    }
   }
 
   public getProductsInfos = async (params: DispatchAbstract<any>): Promise<any> => {

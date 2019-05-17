@@ -7,6 +7,7 @@ import { connect, Dispatch } from 'react-redux';
 import { Stores } from '../store/index';
 import { DispatchAbstract } from '../action/index';
 import SignController from '../action/SignController';
+import { mergeProps } from '../common/config';
 
 interface UserFormProps extends FormComponentProps {
   dispatch: Dispatch<any>;
@@ -97,4 +98,4 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   dispatch,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(RegisterForm);
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(RegisterForm);

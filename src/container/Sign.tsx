@@ -6,10 +6,11 @@ import styles from './index.less';
 import classnames from 'classnames';
 import { Link } from 'react-router-dom';
 import { FormComponentProps } from 'antd/lib/form';
-import SignController from 'src/action/SignController';
+import SignController from '../action/SignController';
 import { DispatchAbstract } from '../action/index';
 import { Dispatch, connect } from 'react-redux';
 import { Stores } from '../store/index';
+import { mergeProps } from '../common/config';
 
 type Props = {
   dispatch: Dispatch<any>;
@@ -81,4 +82,4 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   dispatch,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignForm);
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(SignForm);

@@ -41,7 +41,7 @@ const defaultCommonConfig: DefaultCommonConfig = {
   DEFAULT_DOCUMENT_TITLE: 'Hey-Beauty',
   DEFAULT_FETCH_METHOD: 'POST',
   DEFAULT_BALL_SPEED: 220,
-  DEFAULT_PAGE_SIZE: 20,
+  DEFAULT_PAGE_SIZE: 200,
   DEFAUL_MCHNT_CD: '60000000200', // 60000000217 60000000200
   DEFAULT_PICTURE_LING: '//net.huanmusic.com/qg/pic_default.png',
   TAKEAWAYCARTID: 'TAKEAWAYCARTID',
@@ -56,12 +56,13 @@ const defaultCommonConfig: DefaultCommonConfig = {
 const devConfig: InterfaceConfig = {
   ...defaultCommonConfig,
   // FETCH_ENTRY: 'http://zhouminghui.natapp1.cc',
-  FETCH_ENTRY: 'http://zhouminghui.natapp1.cc',
+  FETCH_ENTRY: 'http://172.30.200.152:8080',
 };
 
 const proConfig: InterfaceConfig = {
   ...defaultCommonConfig,
-  FETCH_ENTRY: 'http://zhouminghui.natapp1.cc',
+  // FETCH_ENTRY: 'http://zhouminghui.natapp1.cc',
+  FETCH_ENTRY: 'http://172.30.200.152:8080',
 };
 
 interface ProcessChoiceFilterFunc<T> {

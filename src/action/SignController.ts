@@ -87,6 +87,10 @@ class SignController {
     console.log('result: ', result);
   }
 
+  public logout = async () => {
+    return await localStorage.clear();
+  }
+
   public saveUserinfo = async (userinfo: any) => {
     const userinfoStand = typeof userinfo === 'string' ? userinfo : JSON.stringify(userinfo);
     localStorage.setItem(config.STORAGE_USERINFO, userinfoStand);

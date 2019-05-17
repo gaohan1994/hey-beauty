@@ -19,6 +19,7 @@ import { getRecommendPosts } from '../store/post';
 import { getUserinfo } from '../store/user';
 import invariant from 'invariant';
 import Swiper from 'react-swipeable-views';
+import Validator from '../common/validator';
 
 const { TextArea } = Input;
 
@@ -222,10 +223,21 @@ class Post extends React.Component<PostProps, PostState> {
       zIndex: '9999',
       fontSize: '14px',
     };
+
+    let imagesLength = 0;
+
+    if (postDetail.video_address && postDetail.video_address.length > 0 ) {
+      postDetail.video_address.map((item: any) => {
+        if (checkVideo(item) === false) {
+          imagesLength += 1;
+        }
+      });
+    }
+
     return (
       <div style={{position: 'relative'}}>
         {
-          postDetail.video_address && postDetail.video_address.length > 0 ? (
+          imagesLength > 1 ? (
             <div onClick={() => this.onNext()} style={{...buttonStyle, right: '20px' }} >
               {`>`}
             </div>
@@ -233,7 +245,7 @@ class Post extends React.Component<PostProps, PostState> {
         }
 
         { 
-          postDetail.video_address && postDetail.video_address.length > 0 ? (
+          imagesLength > 1 ? (
             <div onClick={() => this.onLast()} style={{...buttonStyle, left: '20px' }} >
               {`<`}
             </div>
@@ -333,14 +345,41 @@ class Post extends React.Component<PostProps, PostState> {
     this.setState({comment: value});
   }
 
+  public checkAuth = () => {
+    const helper = new Validator();
+
+    helper.add(this.state.comment, [{
+      strategy: 'isNonEmpty',
+      errorMsg: '请输入评论内容',
+      elementName: 'content',
+    }]);
+
+    const result = helper.start();
+
+    if (result) {
+      return { success: false, result: result.errMsg };
+    } else {
+      return { success: true, result: { comment_content: this.state.comment } };
+    }
+  }
+
   public handleSubmit = async () => {
     const { postDetail, userinfo } = this.props;
+    const { success: CheckSuccess, result: CheckResult } = this.checkAuth();
+    
     try {
+
+      invariant(
+        CheckSuccess,
+        CheckResult || ' '
+      );
+
       const params = {
         param: {
+          ...CheckResult,
           post_id: postDetail.post_id,
           send_login_name: userinfo.user_id,
-          comment_content: this.state.comment,
+          // comment_content: this.state.comment,
           is_reply_comment: '0',
         }
       };

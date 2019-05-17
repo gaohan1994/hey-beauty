@@ -1,18 +1,34 @@
 import React, { Component } from 'react';
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, Icon, Modal } from 'antd';
 import styles from './index.less';
 import classnames from 'classnames';
 import { connect, Dispatch } from 'react-redux';
 import { Stores } from '../store/index';
 import { getCurrentRoute } from '../store/status';
 import Actions from '../action/index';
-import StatusController, { ChangeRouteI } from 'src/action/StatusController';
+import StatusController, { ChangeRouteI } from '../action/StatusController';
 import { DispatchAbstract } from '../action/index';
 import { getUserinfo } from '../store/user';
+import SignController from '../action/SignController';
+import history from '../history';
+
+const { confirm } = Modal;
 
 const { Header, Content } = Layout;
 
-const { Item } = Menu;
+const { Item, SubMenu } = Menu;
+
+function showComfirm () {
+  confirm({
+    title: '提示',
+    content: '确定要退出登录吗',
+    onOk: async function () {
+      await SignController.logout();
+      history.push('/');
+      window.location.reload();
+    }
+  });
+}
 
 interface BasicLayoutProps {
   currentRoute: string;
@@ -27,11 +43,15 @@ interface BasicLayoutState {
 class BasicLayout extends Component<BasicLayoutProps, BasicLayoutState> {
 
   public onMenuClickHandle = (menu: any) => {
-    const payload: DispatchAbstract<ChangeRouteI> = {
-      dispatch: this.props.dispatch,
-      param: { route: menu.key !== 'app' ? menu.key : '' }
-    };
-    StatusController.changeRoute(payload);
+    if (menu.key !== 'logout') {
+      const payload: DispatchAbstract<ChangeRouteI> = {
+        dispatch: this.props.dispatch,
+        param: { route: menu.key !== 'app' ? menu.key : '' }
+      };
+      StatusController.changeRoute(payload);
+    } else {
+      showComfirm();
+    }
   }
 
   render() {
@@ -83,6 +103,20 @@ class BasicLayout extends Component<BasicLayoutProps, BasicLayoutState> {
       }
     }
 
+    {
+      if (userinfo.user_id) {
+        menus.push({
+          key: 'my',
+          title: userinfo.user_name
+        });
+      } else {
+        menus.push({
+          key: 'sign',
+          title: '登录'
+        });
+      }
+    }
+
     return (
       <Menu
         mode="horizontal"
@@ -91,14 +125,35 @@ class BasicLayout extends Component<BasicLayoutProps, BasicLayoutState> {
       >
         {
           menus.map((menu: any) => {
-            return (
-              <Item 
-                key={menu.key} 
-                className={classnames(styles.menu, styles.mr)}
-              > 
-                {menu.title}
-              </Item>
-            );
+
+            if (menu.key !== 'my') {
+              return (
+                <Item 
+                  key={menu.key} 
+                  className={classnames(styles.menu, styles.mr)}
+                > 
+                  {menu.title}
+                </Item>
+              );
+            } else {
+              return (
+                <SubMenu
+                  title={
+                    <span className="submenu-title-wrapper">
+                      <Icon type="setting" />
+                      {menu.title}
+                    </span>
+                  }
+                >
+                  <Item 
+                    key="logout" 
+                    className={classnames(styles.menu, styles.mr)}
+                  > 
+                    退出登录
+                  </Item>
+                </SubMenu>
+              );
+            }
           })
         }
       </Menu>

@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
 import Actions, { DispatchAbstract } from '../action/index';
-import { ChangeRouteI } from '../action/StatusController';
+// import { ChangeRouteI } from '../action/StatusController';
 import { Stores } from '../store';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 // import { Uploader } from '../component';
 import ProductController from '../action/ProductController';
 import { getProductTypeList, getProductInfos, getSearchProducts } from '../store/product';
-import { Tabs, Card, Skeleton, Icon, Input } from 'antd';
+import { Tabs, Card, Skeleton, Icon, Input, notification } from 'antd';
 import config from '../common/config';
 import history from '../history';
 import styles from './style/post.less';
 import classnames from 'classnames';
 import { ProductsCart } from '../component/Cartbar';
+import invariant from 'invariant';
 
 const { Search } = Input;
 
@@ -35,14 +36,6 @@ interface HomeState { }
 
 class Home extends Component<HomeProps, HomeState> {
 
-  public onMenuClickHandle = (menu: any) => {
-    const payload: DispatchAbstract<ChangeRouteI> = {
-      dispatch: this.props.dispatch,
-      param: { route: menu.key }
-    };
-    console.log('payload: ', payload);
-  }
-
   public onSearch = (value: string) => {
     console.log('value: ', value);
     const payload = { product_name: value };
@@ -50,13 +43,28 @@ class Home extends Component<HomeProps, HomeState> {
   }
 
   componentDidMount = () => {
-    const { dispatch } = this.props;
-    const payload: DispatchAbstract<any> = {
-      dispatch,
-      param: {}
-    };
+    this.init();
+  }
 
-    ProductController.getProductsTypeInfos(payload);
+  public init = async () => {
+    try {
+      const { dispatch } = this.props;
+      const payload: DispatchAbstract<any> = {
+        dispatch,
+        param: {}
+      };
+
+      const { success, result } = await ProductController.getProductsTypeInfos(payload);
+      console.log('result: ', result);
+      invariant(
+        success && result[0],
+        '请求接口失败'
+      );
+      const params = result[0].product_type_id;
+      this.onTabsChangeHandle(params);
+    } catch (error) {
+      notification.warn({message: error.message});
+    }
   }
 
   render() {
