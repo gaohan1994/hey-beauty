@@ -5,6 +5,16 @@ import { RECEIVE_POST_LIST, RECEIVE_POST_DETAIL, RECEIVE_RECOMMEND_POST, RECEIVE
 import { store } from '../index';
 class PostController {
 
+  public deleteCollectionInf = async (params: any) => {
+    const { code } = await PostService.deleteCollectionInf(params);
+
+    if (code === '10000') {
+      return { success: true };
+    } else {
+      return { success: false };
+    }
+  }
+
   public addPostInf = async (params: any) => {
     const { code, biz_content } = await PostService.addPostInf(params);
     if (code === '10000') {

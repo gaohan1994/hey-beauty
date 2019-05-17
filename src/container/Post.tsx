@@ -11,7 +11,7 @@ import SignController from '../action/SignController';
 import history from '../history';
 import { getPostDetail } from 'src/store/post';
 import moment from 'moment';
-import { Icon, Avatar, notification, Comment as AntdComment, Tooltip, Form, Input, Button } from 'antd';
+import { Icon, Avatar, notification, Comment as AntdComment, Tooltip, Form, Input, Button, Modal } from 'antd';
 import pstyles from './style/post.less';
 import classnames from 'classnames';
 import ReactPlayer from 'react-player';
@@ -59,63 +59,6 @@ const Editor = ({
     </Form.Item>
   </div>
 );
-
-export const Comment = ({ comment }: any) => {
-  // const commentCls = 'comment';
-  const actions: any[] = [
-    (
-      <span>
-        <Tooltip title="Like">
-          <Icon
-            type="like"
-            // onClick={this.like}
-          />
-        </Tooltip>
-        <span style={{ paddingLeft: 8, cursor: 'auto' }}>
-          {/* {likes} */}
-          0
-        </span>
-      </span>
-    ),
-    (
-      <span>
-        <Tooltip title="Dislike">
-          <Icon
-            type="dislike"
-            // onClick={this.dislike}
-          />
-        </Tooltip>
-        <span style={{ paddingLeft: 8, cursor: 'auto' }}>
-          {/* {dislikes} */}
-          0
-        </span>
-      </span>
-    ),
-    (
-      <span>回复数量{comment.comment_is_reply_comment}</span>
-    )
-  ];
-  return (
-    <AntdComment
-      actions={actions}
-      author={<a>{comment.comment_send_user_name}</a>}
-      avatar={(
-        <Avatar
-          src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-          alt="Han Solo"
-        />
-      )}
-      content={(
-        <p>{comment.comment_content}</p>
-      )}
-      datetime={(
-        <Tooltip title={moment(comment.comment_datetime).format('YYYY-MM-DD HH:mm:ss')}>
-          <span>{moment().fromNow()}</span>
-        </Tooltip>
-      )}
-    />
-  );
-};
 
 export const Postrow = ({post}: any) => {
 
@@ -638,10 +581,106 @@ class Post extends React.Component<PostProps, PostState> {
   }
 
   private renderTips = () => {
-    const { postDetail } = this.props;
+    const { postDetail, userinfo } = this.props;
     const TipCls = 'centerm-tips';
 
     const {comments} = postDetail;
+
+    const deleteComment = async (comment: any, userinfo: any) => {
+      //
+      try {
+        
+        const payload = {
+          comment_id: comment.comment_id
+        };
+        const { success } = await PostController.deleteCollectionInf(payload);
+
+        Modal.confirm({
+          title: '确认删除这条评论吗？',
+          onOk: async () => {
+            invariant(
+              success,
+              '删除评论出错'
+            );
+    
+            notification.success({message: '删除成功'});
+            setTimeout(() => {
+              this.init();
+            }, 1000);
+          }
+        });
+      } catch (error) {
+        notification.warn({message: error.message});
+      }
+    };
+
+    const Comment = ({ comment, userinfo }: any) => {
+      // const commentCls = 'comment';
+      const actions: any[] = [
+        (
+          <span>
+            <Tooltip title="Like">
+              <Icon
+                type="like"
+                // onClick={this.like}
+              />
+            </Tooltip>
+            <span style={{ paddingLeft: 8, cursor: 'auto' }}>
+              {/* {likes} */}
+              0
+            </span>
+          </span>
+        ),
+        (
+          <span>
+            <Tooltip title="Dislike">
+              <Icon
+                type="dislike"
+                // onClick={this.dislike}
+              />
+            </Tooltip>
+            <span style={{ paddingLeft: 8, cursor: 'auto' }}>
+              {/* {dislikes} */}
+              0
+            </span>
+          </span>
+        ),
+        (
+          <span>回复数量{comment.comment_is_reply_comment}</span>
+        )
+      ];
+
+      {
+        if (comment.comment_send_user_name === userinfo.user_name) {
+          actions.push(
+            (
+              <span onClick={() => deleteComment(comment, userinfo)}>删除评论</span>
+            )
+          );
+        }
+      }
+
+      return (
+        <AntdComment
+          actions={actions}
+          author={<a>{comment.comment_send_user_name}</a>}
+          avatar={(
+            <Avatar
+              src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+              alt="Han Solo"
+            />
+          )}
+          content={(
+            <p>{comment.comment_content}</p>
+          )}
+          datetime={(
+            <Tooltip title={moment(comment.comment_datetime).format('YYYY-MM-DD HH:mm:ss')}>
+              <span>{moment().fromNow()}</span>
+            </Tooltip>
+          )}
+        />
+      );
+    };
     return (
       <div className={pstyles[`${TipCls}`]}>
         <h3 className={pstyles[`${TipCls}-title`]}>
@@ -655,7 +694,7 @@ class Post extends React.Component<PostProps, PostState> {
               <div className={pstyles[`${TipCls}-content`]}>
                 {
                   comments.map((comment: any, index: number) => {
-                    return (<Comment key={index} comment={comment} />);
+                    return (<Comment key={index} comment={comment} userinfo={userinfo} />);
                   })
                 }
               </div>

@@ -33,7 +33,7 @@ class App extends React.Component<AppProps, AppState> {
       <div className={styles.container}>
         <div className={classnames(styles['app-prefix'])}>
           <div className={classnames(styles['app-prefix-left'])}>
-            <span className={styles['app-prefix-left-title']} >HEY-BUAUTY</span>
+            <span className={styles['app-prefix-left-title']} >HEY-BEAUTY</span>
             <span className={styles['app-prefix-left-title']} >找到你想要的生活</span>
             <img className={styles['app-prefix-left-img']} src="//ci.xiaohongshu.com/e7088961-073f-4699-8b9a-c4bf8c2abd19@r_640w_640h_ss1.jpg" />
           </div>

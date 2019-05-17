@@ -3,6 +3,18 @@ import config from '../common/config';
 
 class PostService {
 
+  public deleteCollectionInf = (params: any) => {
+    return request(
+      `${config.FETCH_ENTRY}/app/removeComment`,
+      'post',
+      {
+        biz_content: {
+          ...params
+        }
+      }
+    );
+  }
+
   public addPostInf = (params: any) => {
     return request(
       `${config.FETCH_ENTRY}/app/addPostInf`,
